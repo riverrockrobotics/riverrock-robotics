@@ -1,0 +1,1381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>River Rock Robotics | Industrial Intelligence Platform</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800;900&family=Barlow:wght@300;400;500;600&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            'coal':        '#141618',
+            'charcoal':    '#1a1c1e',
+            'charcoal-l':  '#22262b',
+            'charcoal-m':  '#2c3038',
+            'border':      '#3a3f47',
+            'hiviz':       '#f5c400',
+            'hiviz-h':     '#ffdb33',
+            'green':       '#22c55e',
+            'green-d':     '#16a34a',
+            'red':         '#ef4444',
+            'steel':       '#8b9aab',
+            'steel-l':     '#b8c5d0',
+            'blue-arc':    '#38bdf8',
+          },
+          fontFamily: {
+            display: ['Barlow Condensed','sans-serif'],
+            body:    ['Barlow','sans-serif'],
+            mono:    ['Share Tech Mono','monospace'],
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      background: #141618;
+      font-family: 'Barlow', sans-serif;
+      color: #b8c5d0;
+      overflow-x: hidden;
+    }
+
+    /* noise */
+    body::after {
+      content:'';
+      position:fixed; inset:0;
+      background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+      pointer-events:none; z-index:0; opacity:.3;
+    }
+
+    .grid-bg {
+      background-image:
+        linear-gradient(rgba(245,196,0,.035) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(245,196,0,.035) 1px, transparent 1px);
+      background-size: 56px 56px;
+    }
+    .grid-bg-dense {
+      background-image:
+        linear-gradient(rgba(245,196,0,.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(245,196,0,.05) 1px, transparent 1px);
+      background-size: 28px 28px;
+    }
+
+    .hazard {
+      height: 7px;
+      background: repeating-linear-gradient(-45deg,#f5c400 0,#f5c400 14px,#141618 14px,#141618 28px);
+      opacity:.65;
+    }
+
+    /* chamfered button */
+    .btn-cta {
+      background:#f5c400; color:#141618;
+      font-family:'Barlow Condensed',sans-serif; font-weight:800;
+      font-size:1rem; letter-spacing:.12em; text-transform:uppercase;
+      padding:.9rem 2.2rem; border:none; cursor:pointer; display:inline-block;
+      clip-path:polygon(0 0,calc(100% - 11px) 0,100% 11px,100% 100%,11px 100%,0 calc(100% - 11px));
+      transition:all .2s; box-shadow:0 0 28px rgba(245,196,0,.22),0 4px 14px rgba(0,0,0,.4);
+      text-decoration:none;
+    }
+    .btn-cta:hover { background:#ffdb33; box-shadow:0 0 44px rgba(245,196,0,.42),0 6px 22px rgba(0,0,0,.5); transform:translateY(-2px); }
+
+    .btn-ghost {
+      border:2px solid #f5c400; color:#f5c400;
+      font-family:'Barlow Condensed',sans-serif; font-weight:700;
+      font-size:.9rem; letter-spacing:.1em; text-transform:uppercase;
+      padding:.7rem 1.8rem; background:transparent; cursor:pointer; display:inline-block;
+      clip-path:polygon(0 0,calc(100% - 9px) 0,100% 9px,100% 100%,9px 100%,0 calc(100% - 9px));
+      transition:all .2s; text-decoration:none;
+    }
+    .btn-ghost:hover { background:rgba(245,196,0,.1); }
+
+    .btn-green {
+      background:#22c55e; color:#141618;
+      font-family:'Barlow Condensed',sans-serif; font-weight:800;
+      font-size:1rem; letter-spacing:.1em; text-transform:uppercase;
+      padding:.9rem 2.2rem; border:none; cursor:pointer; display:inline-block;
+      clip-path:polygon(0 0,calc(100% - 11px) 0,100% 11px,100% 100%,11px 100%,0 calc(100% - 11px));
+      transition:all .2s; text-decoration:none;
+      box-shadow:0 0 28px rgba(34,197,94,.2),0 4px 14px rgba(0,0,0,.4);
+    }
+    .btn-green:hover { background:#4ade80; transform:translateY(-2px); }
+
+    .btn-blue {
+      background:#38bdf8; color:#141618;
+      font-family:'Barlow Condensed',sans-serif; font-weight:800;
+      font-size:1rem; letter-spacing:.1em; text-transform:uppercase;
+      padding:.9rem 2.2rem; border:none; cursor:pointer; display:inline-block;
+      clip-path:polygon(0 0,calc(100% - 11px) 0,100% 11px,100% 100%,11px 100%,0 calc(100% - 11px));
+      transition:all .2s; text-decoration:none;
+      box-shadow:0 0 28px rgba(56,189,248,.2),0 4px 14px rgba(0,0,0,.4);
+    }
+    .btn-blue:hover { background:#7dd3fc; transform:translateY(-2px); }
+
+    .section-label {
+      font-family:'Share Tech Mono',monospace; font-size:.68rem;
+      letter-spacing:.28em; text-transform:uppercase; color:#f5c400;
+      border-left:3px solid #f5c400; padding-left:.75rem; margin-bottom:1rem; display:inline-block;
+    }
+
+    .card {
+      background:#22262b; border:1px solid #3a3f47; border-left:4px solid #f5c400;
+      transition:all .25s;
+    }
+    .card:hover {
+      box-shadow:0 8px 36px rgba(0,0,0,.4),-4px 0 20px rgba(245,196,0,.07);
+      transform:translateY(-3px);
+    }
+    .card-green { border-left-color:#22c55e; }
+    .card-green:hover { box-shadow:0 8px 36px rgba(0,0,0,.4),-4px 0 20px rgba(34,197,94,.07); }
+    .card-blue { border-left-color:#38bdf8; }
+    .card-blue:hover { box-shadow:0 8px 36px rgba(0,0,0,.4),-4px 0 20px rgba(56,189,248,.07); }
+
+    .corner-mark {
+      position:relative;
+    }
+    .corner-mark::before {
+      content:''; position:absolute; top:0; left:0;
+      width:5px; height:40px; background:#f5c400;
+    }
+    .corner-mark::after {
+      content:''; position:absolute; top:0; left:0;
+      width:40px; height:5px; background:#f5c400;
+    }
+
+    .pulse { animation:pulseA 2.3s ease-in-out infinite; }
+    @keyframes pulseA {
+      0%,100%{opacity:1; box-shadow:0 0 0 0 rgba(34,197,94,.5);}
+      50%{opacity:.75; box-shadow:0 0 0 7px rgba(34,197,94,0);}
+    }
+    .pulse-y { animation:pulseY 2.3s ease-in-out infinite; }
+    @keyframes pulseY {
+      0%,100%{opacity:1; box-shadow:0 0 0 0 rgba(245,196,0,.5);}
+      50%{opacity:.75; box-shadow:0 0 0 7px rgba(245,196,0,0);}
+    }
+
+    .fade-up { opacity:0; transform:translateY(26px); transition:opacity .65s ease,transform .65s ease; }
+    .fade-up.vis { opacity:1; transform:translateY(0); }
+
+    nav { border-bottom:1px solid #3a3f47; backdrop-filter:blur(14px); background:rgba(20,22,24,.9); }
+
+    /* product section accent colors */
+    .prod-cabinet  { --accent:#f5c400; --accentRGB:245,196,0; }
+    .prod-safety   { --accent:#22c55e; --accentRGB:34,197,94; }
+    .prod-tool     { --accent:#38bdf8; --accentRGB:56,189,248; }
+
+    .accent-text    { color:var(--accent); }
+    .accent-border  { border-color:var(--accent); }
+    .accent-bg      { background:var(--accent); color:#141618; }
+    .accent-glow    { box-shadow:0 0 32px rgba(var(--accentRGB),.2); }
+
+    /* stat num */
+    .stat { font-family:'Barlow Condensed',sans-serif; font-weight:900; line-height:1; }
+
+    /* product nav pills */
+    .prod-pill {
+      font-family:'Barlow Condensed',sans-serif; font-weight:700; font-size:.85rem;
+      letter-spacing:.12em; text-transform:uppercase; padding:.5rem 1.25rem;
+      border:1px solid #3a3f47; color:#8b9aab; cursor:pointer; transition:all .2s;
+      clip-path:polygon(0 0,calc(100% - 7px) 0,100% 7px,100% 100%,7px 100%,0 calc(100% - 7px));
+      text-decoration:none; display:inline-block;
+    }
+    .prod-pill:hover, .prod-pill.active { border-color:var(--accent); color:var(--accent); background:rgba(var(--accentRGB),.07); }
+
+    /* divider angles */
+    .angle-down  { clip-path:polygon(0 0,100% 0,100% calc(100% - 52px),0 100%); }
+    .angle-up    { clip-path:polygon(0 52px,100% 0,100% 100%,0 100%); margin-top:-52px; }
+
+    .scanlines {
+      background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,.07) 2px,rgba(0,0,0,.07) 4px);
+      pointer-events:none;
+    }
+
+    /* floating tag */
+    .tag-badge {
+      font-family:'Share Tech Mono',monospace; font-size:.62rem; letter-spacing:.2em;
+      text-transform:uppercase; padding:.3rem .8rem; background:var(--accent);
+      color:#141618; font-weight:700;
+    }
+  </style>
+</head>
+<body>
+
+<!-- ═══════════════════════ NAV ═══════════════════════ -->
+<nav class="fixed top-0 left-0 right-0 z-50">
+  <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+    <a href="#" class="flex items-center gap-3">
+      <div class="relative w-9 h-9 flex-shrink-0">
+        <div class="absolute inset-0 border-2 border-hiviz rotate-45"></div>
+        <div class="absolute inset-2 bg-hiviz rotate-45"></div>
+      </div>
+      <div>
+        <div class="font-display font-800 text-white text-lg leading-tight tracking-wide">RIVER ROCK</div>
+        <div class="font-mono text-hiviz text-xs tracking-widest leading-none">ROBOTICS</div>
+      </div>
+    </a>
+    <div class="hidden md:flex items-center gap-6">
+      <a href="#platform"  class="text-steel-l text-sm hover:text-hiviz transition-colors font-body font-500 tracking-wide">Platform</a>
+      <a href="#cabinet"   class="text-steel-l text-sm hover:text-hiviz transition-colors font-body font-500 tracking-wide">Snap-Mount System</a>
+      <a href="#safety"    class="text-steel-l text-sm hover:text-hiviz transition-colors font-body font-500 tracking-wide">Safety Software</a>
+      <a href="#tool"      class="text-steel-l text-sm hover:text-hiviz transition-colors font-body font-500 tracking-wide">ToolTrack</a>
+      <a href="#pricing"   class="text-steel-l text-sm hover:text-hiviz transition-colors font-body font-500 tracking-wide">Pricing</a>
+      <a href="#rover"     class="text-sm font-body font-500 tracking-wide transition-colors" style="color:#ff6b2b;">Sentinel Rover</a>
+      <a href="#contact" class="btn-cta text-sm py-2 px-5">Request Demo</a>
+    </div>
+  </div>
+</nav>
+
+<!-- ═══════════════════════ HERO ═══════════════════════ -->
+<section class="relative min-h-screen grid-bg flex items-center pt-20 overflow-hidden angle-down">
+  <div class="absolute inset-0 scanlines z-10 pointer-events-none"></div>
+  <div class="absolute top-1/2 right-0 -translate-y-1/2 translate-x-1/3 w-[700px] h-[700px] rounded-full" style="background:radial-gradient(circle,rgba(245,196,0,.07) 0%,transparent 70%);"></div>
+  <div class="absolute bottom-0 left-0 translate-y-1/3 -translate-x-1/4 w-[500px] h-[500px] rounded-full" style="background:radial-gradient(circle,rgba(34,197,94,.05) 0%,transparent 70%);"></div>
+
+  <div class="hazard absolute top-20 left-0 right-0 opacity-50"></div>
+
+  <div class="relative z-20 max-w-7xl mx-auto px-6 py-28">
+    <div class="max-w-4xl">
+      <div class="section-label mb-5">River Rock Robotics · Industrial Intelligence Platform</div>
+
+      <h1 class="font-display font-900 text-white leading-none mb-6" style="font-size:clamp(3rem,7vw,6.5rem);">
+        WHERE<br/>
+        <span class="text-hiviz">MACHINES</span><br/>
+        KEEP HUMANS<br/>
+        <span class="text-hiviz">ACCOUNTABLE.</span>
+      </h1>
+
+      <p class="text-steel-l text-xl leading-relaxed mb-4 max-w-2xl">
+        River Rock Robotics engineers proprietary industrial intelligence systems that eliminate the <span class="text-white font-600">human error variable</span> from your shop floor — across compliance, safety, and asset accountability.
+      </p>
+      <p class="text-steel text-base leading-relaxed mb-5 max-w-2xl">
+        Multiple integrated product lines. One operating philosophy: certainty is not a culture initiative — it's an engineered outcome.
+      </p>
+
+      <!-- Affordability signal -->
+      <div class="bg-charcoal-l border border-border border-l-4 border-l-hiviz p-4 mb-10 max-w-2xl">
+        <div class="flex items-start gap-3">
+          <div class="w-2 h-2 bg-hiviz rounded-full flex-shrink-0 mt-1.5 pulse-y"></div>
+          <div>
+            <span class="font-display font-800 text-white text-lg">Enterprise-grade accountability. Not enterprise pricing.</span>
+            <span class="text-steel-l"> Deployable in any facility, at any scale — hardware that ships to your door and installs before lunch.</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex flex-wrap gap-4 mb-14">
+        <a href="#platform" class="btn-cta">Explore the Platform</a>
+        <a href="#contact" class="btn-ghost">Schedule a Site Assessment</a>
+      </div>
+
+      <!-- 3 product teaser pills -->
+      <div class="flex flex-wrap gap-3">
+        <a href="#cabinet" class="prod-pill prod-cabinet" style="--accent:#f5c400;--accentRGB:245,196,0">Snap-Mount Cabinet System</a>
+        <a href="#safety"  class="prod-pill prod-safety"  style="--accent:#22c55e;--accentRGB:34,197,94">Metered HSE Software</a>
+        <a href="#tool"    class="prod-pill prod-tool"    style="--accent:#38bdf8;--accentRGB:56,189,248">ToolTrack Intelligence</a>
+        <a href="#rover"   class="prod-pill" style="--accent:#ff6b2b;--accentRGB:255,107,43; border-color:#ff6b2b; color:#ff6b2b;">Sentinel Rover ↗ Coming</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="hazard absolute bottom-0 left-0 right-0"></div>
+</section>
+
+<!-- ═══════════════════════ STAT BAR ═══════════════════════ -->
+<section class="bg-charcoal-l border-y border-border py-10 relative z-10" style="margin-top:-2px;">
+  <div class="max-w-7xl mx-auto px-6">
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
+      <div class="fade-up">
+        <div class="stat text-hiviz" style="font-size:3.5rem;">&lt;10</div>
+        <div class="text-steel text-sm mt-1 font-body">Minute Cabinet Retrofit</div>
+      </div>
+      <div class="fade-up" style="transition-delay:.1s">
+        <div class="stat text-hiviz" style="font-size:3.5rem;">0</div>
+        <div class="text-steel text-sm mt-1 font-body">Drill Holes Required</div>
+      </div>
+      <div class="fade-up" style="transition-delay:.2s">
+        <div class="stat text-green" style="font-size:3.5rem;">97%</div>
+        <div class="text-steel text-sm mt-1 font-body">Reduction in Compliance Gaps</div>
+      </div>
+      <div class="fade-up" style="transition-delay:.3s">
+        <div class="stat text-white" style="font-size:3.5rem;">24/7</div>
+        <div class="text-steel text-sm mt-1 font-body">Automated Incident Intelligence</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════ PLATFORM OVERVIEW ═══════════════════════ -->
+<section id="platform" class="py-28 relative">
+  <div class="max-w-7xl mx-auto px-6">
+    <div class="grid lg:grid-cols-2 gap-16 items-center">
+      <div class="fade-up">
+        <div class="section-label">The Operating Philosophy</div>
+        <h2 class="font-display font-900 text-white leading-none mb-6" style="font-size:clamp(2.5rem,4.5vw,4rem);">
+          THE AMERICAN SHOP<br/>FLOOR HAS A<br/>
+          <span class="text-hiviz">HUMAN ERROR</span><br/>PROBLEM.
+        </h2>
+        <p class="text-steel-l text-lg leading-relaxed mb-5">
+          Every compliance failure, every lost tool, every missed safety entry traces back to the same root cause: the system relied on a human to remember something at exactly the right moment. We engineer that dependency out of your operation.
+        </p>
+        <p class="text-steel text-base leading-relaxed mb-8">
+          River Rock Robotics builds modular, non-invasive intelligence systems that work with your existing infrastructure, preserve your certifications, and enforce accountability at the point of action — not in a report generated three days later.
+        </p>
+        <div class="space-y-3">
+          <div class="flex items-center gap-3">
+            <div class="w-2 h-2 bg-hiviz rounded-full flex-shrink-0 pulse-y"></div>
+            <span class="text-steel-l text-sm font-body">Non-invasive. Zero modifications to existing equipment or infrastructure.</span>
+          </div>
+          <div class="flex items-center gap-3">
+            <div class="w-2 h-2 bg-green rounded-full flex-shrink-0 pulse"></div>
+            <span class="text-steel-l text-sm font-body">Modular. Deploy one product line or the full integrated platform.</span>
+          </div>
+          <div class="flex items-center gap-3">
+            <div class="w-2 h-2 bg-blue-arc rounded-full flex-shrink-0" style="animation:pulseA 2.3s ease-in-out infinite; --tw-shadow-color:rgba(56,189,248,.5);"></div>
+            <span class="text-steel-l text-sm font-body">Audit-ready. Every event cryptographically logged, tamper-evident, exportable.</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 3-product architecture diagram -->
+      <div class="fade-up" style="transition-delay:.15s">
+        <div class="corner-mark bg-charcoal-l border border-border p-7 relative">
+          <div class="font-mono text-xs text-hiviz tracking-widest mb-6">PLATFORM ARCHITECTURE · THREE-LAYER MODEL</div>
+          <!-- Layer 1 -->
+          <div class="bg-coal border border-hiviz/30 p-5 mb-3 relative">
+            <div class="absolute -left-px top-0 bottom-0 w-1 bg-hiviz"></div>
+            <div class="flex items-center justify-between mb-2">
+              <div class="font-display font-800 text-white text-lg">Layer 1 — Physical Asset Control</div>
+              <div class="font-mono text-xs text-hiviz bg-hiviz/10 border border-hiviz/30 px-2 py-1">SNAP-MOUNT</div>
+            </div>
+            <div class="text-steel text-sm">Magnetic-mount Edge Intelligence Terminals on cabinets and tool storage. Vision-verified access. Zero drilling.</div>
+          </div>
+          <!-- Layer 2 -->
+          <div class="bg-coal border border-green/30 p-5 mb-3 relative">
+            <div class="absolute -left-px top-0 bottom-0 w-1 bg-green"></div>
+            <div class="flex items-center justify-between mb-2">
+              <div class="font-display font-800 text-white text-lg">Layer 2 — HSE Compliance Software</div>
+              <div class="font-mono text-xs text-green bg-green/10 border border-green/30 px-2 py-1">METERED HSE</div>
+            </div>
+            <div class="text-steel text-sm">Full-spectrum safety management: near miss, incidents, OSHA logs, SDS, training compliance, and live KPI dashboards.</div>
+          </div>
+          <!-- Layer 3 -->
+          <div class="bg-coal border border-blue-arc/30 p-5 mb-3 relative">
+            <div class="absolute -left-px top-0 bottom-0 w-1 bg-blue-arc"></div>
+            <div class="flex items-center justify-between mb-2">
+              <div class="font-display font-800 text-white text-lg">Layer 3 — Tool Accountability</div>
+              <div class="font-mono text-xs text-blue-arc bg-blue-arc/10 border border-blue-arc/30 px-2 py-1">TOOLTRACK</div>
+            </div>
+            <div class="text-steel text-sm">Vision-verified tool check-out/in. FOD prevention. Hygiene enforcement. Zero-cost-of-entry alternative to RFID.</div>
+          </div>
+          <!-- Layer 4 -->
+          <div class="bg-coal p-5 mb-3 relative" style="border:1px solid rgba(255,107,43,.3);">
+            <div class="absolute -left-px top-0 bottom-0 w-1" style="background:#ff6b2b;"></div>
+            <div class="flex items-center justify-between mb-2">
+              <div class="font-display font-800 text-white text-lg">Layer 4 — Autonomous Patrol</div>
+              <div class="font-mono text-xs px-2 py-1" style="color:#ff6b2b; background:rgba(255,107,43,.1); border:1px solid rgba(255,107,43,.3);">IN DEV</div>
+            </div>
+            <div class="text-steel text-sm">Sentinel Rover — TPM grease routes, thermal scans, FOD sweeps, safety hazard detection. Autonomous. Every shift. Fully logged.</div>
+          </div>
+          <!-- Connected bar -->
+          <div class="mt-5 h-1 w-full" style="background:linear-gradient(90deg,#f5c400,#22c55e,#38bdf8);"></div>
+          <div class="mt-2 font-mono text-xs text-steel text-right">ALL LAYERS SHARE A UNIFIED COMMAND CENTER</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="hazard"></div>
+
+<!-- ═══════════════════════════════════════════════════════
+     PRODUCT 1 — SNAP-MOUNT CABINET SYSTEM
+═══════════════════════════════════════════════════════ -->
+<section id="cabinet" class="prod-cabinet py-28 bg-charcoal-l relative" style="--accent:#f5c400;--accentRGB:245,196,0;">
+  <div class="absolute inset-0 grid-bg opacity-40"></div>
+  <div class="absolute top-1/2 right-0 -translate-y-1/2 translate-x-1/3 w-[600px] h-[600px] rounded-full" style="background:radial-gradient(circle,rgba(245,196,0,.06) 0%,transparent 70%);"></div>
+
+  <div class="relative max-w-7xl mx-auto px-6">
+    <!-- Header -->
+    <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-16 fade-up">
+      <div>
+        <div class="section-label">Product Line 01 · Physical Asset Control</div>
+        <h2 class="font-display font-900 text-white leading-none" style="font-size:clamp(2.5rem,5vw,4.5rem);">
+          SNAP-MOUNT<br/>
+          <span class="text-hiviz">CABINET</span><br/>
+          INTELLIGENCE
+        </h2>
+      </div>
+      <div class="max-w-sm">
+        <p class="text-steel-l text-base leading-relaxed">
+          Turn any industrial cabinet into a secure, vision-congruent asset hub in under 10 minutes. No drilling. No certifications voided. Total accountability.
+        </p>
+        <div class="mt-4 flex gap-3 flex-wrap">
+          <a href="#contact" class="btn-cta">Get a Pilot Quote</a>
+          <a href="#contact" class="btn-ghost">View Spec Sheet</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Feature grid -->
+    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-14">
+
+      <!-- Zero Drill -->
+      <div class="card p-6 fade-up">
+        <div class="w-10 h-10 bg-hiviz/10 border border-hiviz/30 flex items-center justify-center mb-4">
+          <svg class="w-5 h-5 text-hiviz" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+        </div>
+        <div class="font-display font-800 text-white text-xl mb-2">Zero-Drill Mandate</div>
+        <div class="text-steel text-sm leading-relaxed">Industrial-grade magnetic-mount architecture preserves UL/FM fire ratings and chemical storage certifications. No permit. No facilities ticket. No voided approvals.</div>
+      </div>
+
+      <!-- Scan to Silence -->
+      <div class="card p-6 fade-up" style="transition-delay:.08s">
+        <div class="w-10 h-10 bg-hiviz/10 border border-hiviz/30 flex items-center justify-center mb-4">
+          <svg class="w-5 h-5 text-hiviz" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+        </div>
+        <div class="font-display font-800 text-white text-xl mb-2">Scan-to-Silence Workflow</div>
+        <div class="text-steel text-sm leading-relaxed">Visual and audible cues create a closed-loop that cannot be bypassed. Compliance becomes the path of least resistance — 100% data entry, every time, for every operator.</div>
+      </div>
+
+      <!-- Tiered Access -->
+      <div class="card p-6 fade-up" style="transition-delay:.16s">
+        <div class="w-10 h-10 bg-hiviz/10 border border-hiviz/30 flex items-center justify-center mb-4">
+          <svg class="w-5 h-5 text-hiviz" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+        </div>
+        <div class="font-display font-800 text-white text-xl mb-2">Modular Access Control</div>
+        <div class="text-steel text-sm leading-relaxed">Level 1 behavioral workflow for standard assets. Level 2 badge-release magnetic-lock for high-consequence materials. Tiered roles: Operator / Supervisor / Admin.</div>
+      </div>
+
+      <!-- GHS Vision -->
+      <div class="card p-6 fade-up" style="transition-delay:.24s">
+        <div class="w-10 h-10 bg-hiviz/10 border border-hiviz/30 flex items-center justify-center mb-4">
+          <svg class="w-5 h-5 text-hiviz" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17H3a2 2 0 01-2-2V5a2 2 0 012-2h14a2 2 0 012 2v10a2 2 0 01-2 2h-2"/></svg>
+        </div>
+        <div class="font-display font-800 text-white text-xl mb-2">Threshold Vision Intelligence</div>
+        <div class="text-steel text-sm leading-relaxed">Onboard Neural Processing Unit verifies GHS pictograms and labels at the cabinet threshold in under 200ms. Safety Data Sheets are auto-pushed to the worker's device on identification.</div>
+      </div>
+
+      <!-- Tamper -->
+      <div class="card p-6 fade-up" style="transition-delay:.32s">
+        <div class="w-10 h-10 bg-hiviz/10 border border-hiviz/30 flex items-center justify-center mb-4">
+          <svg class="w-5 h-5 text-hiviz" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+        </div>
+        <div class="font-display font-800 text-white text-xl mb-2">Hard-Site Integrity</div>
+        <div class="text-steel text-sm leading-relaxed">Tri-axis brute-force tamper detection. Supervisor SMS dispatched within 4 seconds of a tamper event. All attempts are cryptographically logged and irreversible by field personnel.</div>
+      </div>
+
+      <!-- Hybrid Comms -->
+      <div class="card p-6 fade-up" style="transition-delay:.40s">
+        <div class="w-10 h-10 bg-hiviz/10 border border-hiviz/30 flex items-center justify-center mb-4">
+          <svg class="w-5 h-5 text-hiviz" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.111 16.404a5.5 5.5 0 017.778 0M12 20h.01m-7.08-7.071c3.904-3.905 10.236-3.905 14.141 0M1.394 9.393c5.857-5.857 15.355-5.857 21.213 0"/></svg>
+        </div>
+        <div class="font-display font-800 text-white text-xl mb-2">Hybrid Comms Infrastructure</div>
+        <div class="text-steel text-sm leading-relaxed">Enterprise WiFi 6 with WPA3 for connected facilities. Self-healing AES-256 Private Mesh Nodes for remote or RF-challenged environments. Your facility's security posture drives the choice.</div>
+      </div>
+    </div>
+
+    <!-- cert row -->
+    <div class="bg-coal border border-border p-5 flex flex-wrap gap-6 items-center justify-between fade-up">
+      <div class="font-mono text-xs text-steel tracking-widest">CERTIFICATION INTEGRITY PRESERVED:</div>
+      <div class="flex flex-wrap gap-4">
+        <div class="flex items-center gap-2"><div class="w-2 h-2 bg-green rounded-full pulse"></div><span class="font-mono text-xs text-green">UL LISTED</span></div>
+        <div class="flex items-center gap-2"><div class="w-2 h-2 bg-green rounded-full pulse"></div><span class="font-mono text-xs text-green">FM APPROVED</span></div>
+        <div class="flex items-center gap-2"><div class="w-2 h-2 bg-green rounded-full pulse"></div><span class="font-mono text-xs text-green">NFPA 30</span></div>
+        <div class="flex items-center gap-2"><div class="w-2 h-2 bg-green rounded-full pulse"></div><span class="font-mono text-xs text-green">OSHA 1910.1200</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="hazard"></div>
+
+<!-- ═══════════════════════════════════════════════════════
+     PRODUCT 2 — METERED HSE SAFETY SOFTWARE
+═══════════════════════════════════════════════════════ -->
+<section id="safety" class="prod-safety py-28 relative" style="--accent:#22c55e;--accentRGB:34,197,94;">
+  <div class="absolute top-1/2 left-0 -translate-y-1/2 -translate-x-1/3 w-[600px] h-[600px] rounded-full" style="background:radial-gradient(circle,rgba(34,197,94,.06) 0%,transparent 70%);"></div>
+
+  <div class="relative max-w-7xl mx-auto px-6">
+    <!-- Header -->
+    <div class="grid lg:grid-cols-2 gap-14 items-start mb-16">
+      <div class="fade-up">
+        <div class="section-label" style="color:#22c55e; border-left-color:#22c55e;">Product Line 02 · HSE Compliance Software</div>
+        <h2 class="font-display font-900 text-white leading-none mb-6" style="font-size:clamp(2.5rem,5vw,4.5rem);">
+          METERED<br/>
+          <span style="color:#22c55e">HSE</span><br/>
+          PLATFORM
+        </h2>
+        <p class="text-steel-l text-lg leading-relaxed mb-4">
+          A full-spectrum Health, Safety & Environmental management system built for the American manufacturing floor. Every module you need — none of the enterprise bloat you don't.
+        </p>
+        <p class="text-steel text-base leading-relaxed mb-6">
+          From near-miss entry to OSHA 300 logs, from GHS chemical management to training compliance tracking — all in a single browser-based platform that works on any device, requires no IT infrastructure, and auto-saves every entry.
+        </p>
+        <div class="flex flex-wrap gap-3">
+          <a href="#contact" class="btn-green">Request a Demo</a>
+          <a href="#contact" class="btn-ghost" style="border-color:#22c55e; color:#22c55e;">View Feature List</a>
+        </div>
+      </div>
+
+      <!-- Module overview panel -->
+      <div class="fade-up" style="transition-delay:.15s">
+        <div class="bg-charcoal-l border border-border relative" style="border-left:4px solid #22c55e;">
+          <div class="bg-charcoal-m border-b border-border px-5 py-3 flex items-center justify-between">
+            <div class="flex items-center gap-2">
+              <div class="w-2 h-2 rounded-full bg-green pulse"></div>
+              <span class="font-mono text-xs tracking-widest" style="color:#22c55e;">METERED HSE · MODULE OVERVIEW</span>
+            </div>
+            <div class="font-mono text-xs text-steel">v4.2 · MULTI-SITE</div>
+          </div>
+          <div class="p-5 grid grid-cols-2 gap-3">
+            <div class="bg-coal border border-border p-4">
+              <div class="font-mono text-xs text-green mb-2">01 · INCIDENTS</div>
+              <div class="text-steel-l text-sm font-body">Near miss and incident entry, follow-up workflows, photo/file attachments, root cause analysis with Five Why methodology.</div>
+            </div>
+            <div class="bg-coal border border-border p-4">
+              <div class="font-mono text-xs text-green mb-2">02 · OSHA LOGS</div>
+              <div class="text-steel-l text-sm font-body">OSHA 300, 301, and 300A forms. Automated TRIR and LTIR calculations from live man-hours. Exportable for inspections.</div>
+            </div>
+            <div class="bg-coal border border-border p-4">
+              <div class="font-mono text-xs text-green mb-2">03 · HSE AUDITS</div>
+              <div class="text-steel-l text-sm font-body">Structured audit templates with corrective action tracking, supervisor sign-off workflow, and closure verification.</div>
+            </div>
+            <div class="bg-coal border border-border p-4">
+              <div class="font-mono text-xs text-green mb-2">04 · GHS / SDS</div>
+              <div class="text-steel-l text-sm font-body">Chemical inventory with GHS pictogram support, SDS library management, and hazard classification by location.</div>
+            </div>
+            <div class="bg-coal border border-border p-4">
+              <div class="font-mono text-xs text-green mb-2">05 · TRAINING</div>
+              <div class="text-steel-l text-sm font-body">10+ pre-loaded course types. Per-employee tracking, expiration alerts, compliance rate dashboard. OSHA 10/30, forklift, HazCom and more.</div>
+            </div>
+            <div class="bg-coal border border-border p-4">
+              <div class="font-mono text-xs text-green mb-2">06 · KPI DASHBOARD</div>
+              <div class="text-steel-l text-sm font-body">Live TRIR/LTIR, weekly/monthly/annual trends. Multi-site view: facility-level or company-wide rollup. Charts and print-ready reports.</div>
+            </div>
+          </div>
+          <div class="px-5 pb-5">
+            <div class="bg-green/10 border border-green/30 p-4">
+              <div class="font-mono text-xs text-green mb-1">MULTI-SITE SUPPORT</div>
+              <div class="text-steel text-sm">Separate facility tracking with unified company-level rollup. Ideal for multi-plant operations with shared safety leadership.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- KPI showcase -->
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 fade-up">
+      <div class="bg-charcoal-l border border-border p-5 text-center" style="border-left:4px solid #22c55e;">
+        <div class="stat text-green mb-1" style="font-size:2.8rem;">TRIR</div>
+        <div class="font-mono text-xs text-steel">Auto-calculated from live man-hours</div>
+      </div>
+      <div class="bg-charcoal-l border border-border p-5 text-center" style="border-left:4px solid #22c55e;">
+        <div class="stat text-green mb-1" style="font-size:2.8rem;">LTIR</div>
+        <div class="font-mono text-xs text-steel">Lost time incident rate tracking</div>
+      </div>
+      <div class="bg-charcoal-l border border-border p-5 text-center" style="border-left:4px solid #22c55e;">
+        <div class="stat text-white mb-1" style="font-size:2.8rem;">300A</div>
+        <div class="font-mono text-xs text-steel">OSHA 300 / 301 / 300A ready</div>
+      </div>
+      <div class="bg-charcoal-l border border-border p-5 text-center" style="border-left:4px solid #22c55e;">
+        <div class="stat text-green mb-1" style="font-size:2.8rem;">SDS</div>
+        <div class="font-mono text-xs text-steel">GHS chemical library, full HazCom</div>
+      </div>
+    </div>
+
+    <!-- Subscription note -->
+    <div class="mt-8 bg-coal border border-green/20 p-6 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 fade-up">
+      <div>
+        <div class="font-display font-800 text-white text-xl mb-1">Subscription-Based. No IT Required.</div>
+        <div class="text-steel text-sm max-w-xl">Browser-based platform with auto-save, multi-device access, and local file export. No servers to manage, no annual maintenance contracts, no vendor lock-in on your data.</div>
+      </div>
+      <a href="#contact" class="btn-green flex-shrink-0">Get Pricing</a>
+    </div>
+  </div>
+</section>
+
+<div class="hazard"></div>
+
+<!-- ═══════════════════════════════════════════════════════
+     PRODUCT 3 — TOOLTRACK INTELLIGENCE
+═══════════════════════════════════════════════════════ -->
+<section id="tool" class="prod-tool py-28 bg-charcoal-l relative" style="--accent:#38bdf8;--accentRGB:56,189,248;">
+  <div class="absolute inset-0 grid-bg opacity-30"></div>
+  <div class="absolute top-1/2 right-0 -translate-y-1/2 translate-x-1/3 w-[600px] h-[600px] rounded-full" style="background:radial-gradient(circle,rgba(56,189,248,.06) 0%,transparent 70%);"></div>
+
+  <div class="relative max-w-7xl mx-auto px-6">
+    <!-- Header -->
+    <div class="mb-16 fade-up">
+      <div class="section-label" style="color:#38bdf8; border-left-color:#38bdf8;">Product Line 03 · Tool & FOD Accountability</div>
+      <div class="grid lg:grid-cols-2 gap-8 items-end">
+        <h2 class="font-display font-900 text-white leading-none" style="font-size:clamp(2.5rem,5vw,4.5rem);">
+          TOOLTRACK<br/>
+          <span style="color:#38bdf8">INTELLIGENCE</span>
+        </h2>
+        <div>
+          <p class="text-steel-l text-lg leading-relaxed mb-4">
+            The lost-tool problem costs American manufacturers millions annually in rework, downtime, and FOD incidents. RFID systems solve it — but at capital costs that kill the ROI calculation. ToolTrack solves it differently.
+          </p>
+          <div class="flex flex-wrap gap-3">
+            <a href="#contact" class="btn-blue">Request Site Assessment</a>
+            <a href="#contact" class="btn-ghost" style="border-color:#38bdf8; color:#38bdf8;">Compare vs RFID</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Problem / Solution split -->
+    <div class="grid lg:grid-cols-2 gap-8 mb-12">
+
+      <!-- The problem -->
+      <div class="bg-coal border border-red/30 p-7 fade-up" style="border-left:4px solid #ef4444;">
+        <div class="font-mono text-xs text-red mb-4 tracking-widest">THE PROBLEM · COST OF LOST TOOLS</div>
+        <div class="space-y-4">
+          <div class="flex items-start gap-3">
+            <div class="w-5 h-5 bg-red/20 border border-red/40 flex items-center justify-center flex-shrink-0 mt-0.5">
+              <svg class="w-3 h-3 text-red" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"/></svg>
+            </div>
+            <div>
+              <div class="font-display font-700 text-white text-lg">FOD Events in Aerospace & Precision Mfg</div>
+              <div class="text-steel text-sm mt-1">A single Foreign Object Damage event can halt an entire production line. A dropped tool in a high-tolerance environment can cause six-figure rework.</div>
+            </div>
+          </div>
+          <div class="flex items-start gap-3">
+            <div class="w-5 h-5 bg-red/20 border border-red/40 flex items-center justify-center flex-shrink-0 mt-0.5">
+              <svg class="w-3 h-3 text-red" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"/></svg>
+            </div>
+            <div>
+              <div class="font-display font-700 text-white text-lg">Contaminated Environments</div>
+              <div class="text-steel text-sm mt-1">Food processing, pharmaceutical, and cleanroom environments require certified tool hygiene verification at every shift boundary. Manual sign-out sheets fail consistently.</div>
+            </div>
+          </div>
+          <div class="flex items-start gap-3">
+            <div class="w-5 h-5 bg-red/20 border border-red/40 flex items-center justify-center flex-shrink-0 mt-0.5">
+              <svg class="w-3 h-3 text-red" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"/></svg>
+            </div>
+            <div>
+              <div class="font-display font-700 text-white text-lg">The RFID Cost Barrier</div>
+              <div class="text-steel text-sm mt-1">Full RFID tool tracking systems require tagging every individual item, specialized readers, and infrastructure investments that are cost-prohibitive for most shops. ToolTrack delivers equivalent accountability without the capital outlay.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- The solution -->
+      <div class="bg-coal border border-blue-arc/30 p-7 fade-up" style="border-left:4px solid #38bdf8; transition-delay:.12s;">
+        <div class="font-mono text-xs tracking-widest mb-4" style="color:#38bdf8">THE SOLUTION · TOOLTRACK INTELLIGENCE</div>
+        <div class="space-y-4">
+          <div class="flex items-start gap-3">
+            <div class="w-5 h-5 flex items-center justify-center flex-shrink-0 mt-0.5" style="background:rgba(56,189,248,.15); border:1px solid rgba(56,189,248,.4);">
+              <svg class="w-3 h-3" style="color:#38bdf8" fill="currentColor" viewBox="0 0 20 20"><path d="M16.707 5.293a1 1 0 00-1.414 0L8 12.586l-3.293-3.293a1 1 0 00-1.414 1.414l4 4a1 1 0 001.414 0l8-8a1 1 0 000-1.414z"/></svg>
+            </div>
+            <div>
+              <div class="font-display font-700 text-white text-lg">Vision-Verified Check-Out / Check-In</div>
+              <div class="text-steel text-sm mt-1">The cart or crib terminal photographs and logs every tool removed and returned. No RFID tags required. The system knows what left and what came back — automatically.</div>
+            </div>
+          </div>
+          <div class="flex items-start gap-3">
+            <div class="w-5 h-5 flex items-center justify-center flex-shrink-0 mt-0.5" style="background:rgba(56,189,248,.15); border:1px solid rgba(56,189,248,.4);">
+              <svg class="w-3 h-3" style="color:#38bdf8" fill="currentColor" viewBox="0 0 20 20"><path d="M16.707 5.293a1 1 0 00-1.414 0L8 12.586l-3.293-3.293a1 1 0 00-1.414 1.414l4 4a1 1 0 001.414 0l8-8a1 1 0 000-1.414z"/></svg>
+            </div>
+            <div>
+              <div class="font-display font-700 text-white text-lg">Hygiene Environment Enforcement</div>
+              <div class="text-steel text-sm mt-1">Shift-boundary tool reconciliation with supervisor alert if an item is outstanding at end-of-shift. Every tool accounted for before the next crew touches the environment.</div>
+            </div>
+          </div>
+          <div class="flex items-start gap-3">
+            <div class="w-5 h-5 flex items-center justify-center flex-shrink-0 mt-0.5" style="background:rgba(56,189,248,.15); border:1px solid rgba(56,189,248,.4);">
+              <svg class="w-3 h-3" style="color:#38bdf8" fill="currentColor" viewBox="0 0 20 20"><path d="M16.707 5.293a1 1 0 00-1.414 0L8 12.586l-3.293-3.293a1 1 0 00-1.414 1.414l4 4a1 1 0 001.414 0l8-8a1 1 0 000-1.414z"/></svg>
+            </div>
+            <div>
+              <div class="font-display font-700 text-white text-lg">FOD Prevention Protocol</div>
+              <div class="text-steel text-sm mt-1">Automatic count reconciliation at shift end or job completion. System flags any discrepancy before work continues. Creates a defensible, auditable FOD record with timestamps and operator attribution.</div>
+            </div>
+          </div>
+          <div class="flex items-start gap-3">
+            <div class="w-5 h-5 flex items-center justify-center flex-shrink-0 mt-0.5" style="background:rgba(56,189,248,.15); border:1px solid rgba(56,189,248,.4);">
+              <svg class="w-3 h-3" style="color:#38bdf8" fill="currentColor" viewBox="0 0 20 20"><path d="M16.707 5.293a1 1 0 00-1.414 0L8 12.586l-3.293-3.293a1 1 0 00-1.414 1.414l4 4a1 1 0 001.414 0l8-8a1 1 0 000-1.414z"/></svg>
+            </div>
+            <div>
+              <div class="font-display font-700 text-white text-lg">Snap-Mount on Any Cart or Crib</div>
+              <div class="text-steel text-sm mt-1">Same magnetic-mount architecture as the cabinet line. Retrofits to existing tool carts, shadow boards, and cribs in minutes. No new furniture required.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Industries / use cases -->
+    <div class="fade-up">
+      <div class="font-mono text-xs text-steel tracking-widest mb-4">DESIGNED FOR THESE ENVIRONMENTS:</div>
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+        <div class="bg-coal border border-border p-4 text-center">
+          <div class="font-display font-700 text-white text-lg mb-1">Aerospace</div>
+          <div class="font-mono text-xs text-blue-arc">FOD CRITICAL</div>
+        </div>
+        <div class="bg-coal border border-border p-4 text-center">
+          <div class="font-display font-700 text-white text-lg mb-1">Food & Bev</div>
+          <div class="font-mono text-xs text-blue-arc">HYGIENE CRITICAL</div>
+        </div>
+        <div class="bg-coal border border-border p-4 text-center">
+          <div class="font-display font-700 text-white text-lg mb-1">Precision Mfg</div>
+          <div class="font-mono text-xs text-blue-arc">TOLERANCE CRITICAL</div>
+        </div>
+        <div class="bg-coal border border-border p-4 text-center">
+          <div class="font-display font-700 text-white text-lg mb-1">General Shop</div>
+          <div class="font-mono text-xs text-blue-arc">COST RECOVERY</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ROI callout -->
+    <div class="mt-8 fade-up" style="background:#22262b; border-left:4px solid #38bdf8; border:1px solid #3a3f47; border-left-width:4px; padding:1.5rem 2rem;">
+      <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+        <div>
+          <div class="font-display font-800 text-white text-xl mb-1">
+            Fraction of RFID Cost. <span style="color:#38bdf8">Same Accountability.</span>
+          </div>
+          <div class="text-steel text-sm max-w-xl">ToolTrack delivers vision-based tool accountability without tagging individual items, purchasing specialized readers, or overhauling your tool storage layout. Deploy in an afternoon.</div>
+        </div>
+        <a href="#contact" class="btn-blue flex-shrink-0">Get a Cost Comparison</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="hazard"></div>
+
+<!-- ═══════════════════════ AFFORDABILITY ═══════════════════════ -->
+<section id="pricing" class="py-24 bg-charcoal-l relative">
+  <div class="absolute inset-0 grid-bg opacity-40"></div>
+  <div class="relative max-w-7xl mx-auto px-6">
+
+    <div class="text-center mb-14 fade-up">
+      <div class="section-label inline-block">Accessible by Design</div>
+      <h2 class="font-display font-900 text-white leading-none mb-4" style="font-size:clamp(2.5rem,5vw,4.2rem);">
+        AFFORDABLE PROTECTION<br/>
+        <span class="text-hiviz">DEPLOYABLE IN EVERY FACILITY.</span>
+      </h2>
+      <p class="text-steel-l text-lg max-w-2xl mx-auto">
+        This isn't a six-figure capital project reserved for Fortune 500 facilities. It's protection that fits a real operational budget — and installs before your next shift starts.
+      </p>
+    </div>
+
+    <!-- Comparison table -->
+    <div class="grid md:grid-cols-3 gap-6 mb-12">
+
+      <!-- Them: Enterprise -->
+      <div class="bg-coal border border-border p-7 fade-up opacity-75">
+        <div class="font-mono text-xs text-steel tracking-widest mb-4">ENTERPRISE SYSTEMS</div>
+        <div class="font-display font-900 text-red mb-1" style="font-size:2.8rem; line-height:1;">$10K+</div>
+        <div class="text-steel text-sm mb-5">per cabinet unit, before installation</div>
+        <div class="space-y-2.5">
+          <div class="flex items-center gap-2">
+            <svg class="w-4 h-4 text-red flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"/></svg>
+            <span class="text-steel text-sm">Requires capital approval process</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <svg class="w-4 h-4 text-red flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"/></svg>
+            <span class="text-steel text-sm">Requires IT project & infrastructure</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <svg class="w-4 h-4 text-red flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"/></svg>
+            <span class="text-steel text-sm">Weeks to months to deploy</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <svg class="w-4 h-4 text-red flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"/></svg>
+            <span class="text-steel text-sm">Voids cabinet certifications</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <svg class="w-4 h-4 text-red flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"/></svg>
+            <span class="text-steel text-sm">Out of reach for most facilities</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- River Rock -->
+      <div class="bg-coal p-7 fade-up relative" style="border:2px solid #f5c400; transition-delay:.1s;">
+        <div class="absolute -top-3 left-1/2 -translate-x-1/2 bg-hiviz text-coal font-display font-800 text-xs tracking-widest px-4 py-1 whitespace-nowrap">RIVER ROCK ROBOTICS</div>
+        <div class="font-mono text-xs text-hiviz tracking-widest mb-4 mt-2">BUILT TO BE ACCESSIBLE</div>
+        <div class="font-display font-900 text-hiviz mb-1" style="font-size:2.8rem; line-height:1;">AFFORDABLE</div>
+        <div class="text-steel text-sm mb-5">hardware that ships to your door · subscriptions that fit a real budget</div>
+        <div class="space-y-2.5 mb-6">
+          <div class="flex items-center gap-2">
+            <svg class="w-4 h-4 text-green flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path d="M16.707 5.293a1 1 0 00-1.414 0L8 12.586l-3.293-3.293a1 1 0 00-1.414 1.414l4 4a1 1 0 001.414 0l8-8a1 1 0 000-1.414z"/></svg>
+            <span class="text-steel-l text-sm">No capital approval process required</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <svg class="w-4 h-4 text-green flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path d="M16.707 5.293a1 1 0 00-1.414 0L8 12.586l-3.293-3.293a1 1 0 00-1.414 1.414l4 4a1 1 0 001.414 0l8-8a1 1 0 000-1.414z"/></svg>
+            <span class="text-steel-l text-sm">Zero IT involvement required</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <svg class="w-4 h-4 text-green flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path d="M16.707 5.293a1 1 0 00-1.414 0L8 12.586l-3.293-3.293a1 1 0 001.414 1.414l4 4a1 1 0 001.414 0l8-8a1 1 0 000-1.414z"/></svg>
+            <span class="text-steel-l text-sm">Live in under 10 minutes</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <svg class="w-4 h-4 text-green flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path d="M16.707 5.293a1 1 0 00-1.414 0L8 12.586l-3.293-3.293a1 1 0 001.414 1.414l4 4a1 1 0 001.414 0l8-8a1 1 0 000-1.414z"/></svg>
+            <span class="text-steel-l text-sm">Cabinet certifications fully preserved</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <svg class="w-4 h-4 text-green flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path d="M16.707 5.293a1 1 0 00-1.414 0L8 12.586l-3.293-3.293a1 1 0 001.414 1.414l4 4a1 1 0 001.414 0l8-8a1 1 0 000-1.414z"/></svg>
+            <span class="text-steel-l text-sm">Any facility. Any size. Today.</span>
+          </div>
+        </div>
+        <div class="border-t border-border pt-5">
+          <div class="font-mono text-xs text-steel tracking-widest mb-3">PRICING</div>
+          <div class="text-steel-l text-sm leading-relaxed mb-3">Tiered by product line and deployment scale. Built to fit operational budgets — not enterprise procurement cycles.</div>
+          <a href="#contact" class="btn-cta text-sm" style="padding:.7rem 1.5rem;">Get a Custom Quote</a>
+        </div>
+      </div>
+
+      <!-- The real comparison: OSHA fine -->
+      <div class="bg-coal border border-border p-7 fade-up" style="transition-delay:.2s;">
+        <div class="font-mono text-xs text-steel tracking-widest mb-4">THE COST OF DOING NOTHING</div>
+        <div class="font-display font-900 text-red mb-1" style="font-size:2.8rem; line-height:1;">$15K+</div>
+        <div class="text-steel text-sm mb-5">minimum OSHA fine per citation</div>
+        <div class="space-y-3">
+          <div class="bg-charcoal-m border border-border p-3">
+            <div class="font-mono text-xs text-red mb-1">OSHA 29 CFR 1910.1200</div>
+            <div class="text-steel text-sm">A single HazCom violation runs $15,625 minimum. Willful or repeat violations: up to $156,259. These are published federal penalty figures — not hypotheticals.</div>
+          </div>
+          <div class="bg-charcoal-m border border-border p-3">
+            <div class="font-mono text-xs text-hiviz mb-1">LOST TOOL / FOD EVENT</div>
+            <div class="text-steel text-sm">One FOD event in a precision environment can mean $10K–$100K+ in rework, line downtime, and liability exposure.</div>
+          </div>
+          <div class="bg-charcoal-m border border-border p-3">
+            <div class="font-mono text-xs text-green mb-1">THE MATH IS SIMPLE</div>
+            <div class="text-steel text-sm">One avoided citation covers your entire River Rock deployment — hardware and years of subscription combined.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bottom access statement -->
+    <div class="bg-coal border border-hiviz/30 p-8 text-center fade-up" style="border-top:4px solid #f5c400;">
+      <div class="font-display font-900 text-white mb-3" style="font-size:clamp(1.5rem,3vw,2.5rem);">
+        If your facility has a cabinet, a tool crib, or a compliance obligation —<br/>
+        <span class="text-hiviz">you can afford River Rock Robotics.</span>
+      </div>
+      <p class="text-steel text-base max-w-2xl mx-auto mb-6">No procurement committee. No IT sign-off. No facilities work order. Order hardware, mount it, connect it, and your facility is accountable before the next shift clock-in.</p>
+      <a href="#contact" class="btn-cta">Talk to Us About Your Facility</a>
+    </div>
+
+  </div>
+</section>
+
+<div class="hazard"></div>
+
+<!-- ═══════════════════════════════════════════════════════
+     PRODUCT 4 — SENTINEL ROVER (COMING)
+═══════════════════════════════════════════════════════ -->
+<section id="rover" class="py-28 relative overflow-hidden" style="--accent:#ff6b2b;--accentRGB:255,107,43;">
+  <div class="absolute inset-0 grid-bg opacity-30"></div>
+  <!-- Atmospheric glow -->
+  <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[500px] rounded-full" style="background:radial-gradient(ellipse,rgba(255,107,43,.07) 0%,transparent 70%);"></div>
+
+  <div class="relative max-w-7xl mx-auto px-6">
+
+    <!-- Coming soon banner -->
+    <div class="flex items-center gap-4 mb-12 fade-up">
+      <div class="h-px flex-1 bg-gradient-to-r from-transparent to-orange-500 opacity-40"></div>
+      <div class="font-mono text-xs tracking-widest px-4 py-2 border" style="color:#ff6b2b; border-color:#ff6b2b; background:rgba(255,107,43,.08);">IN DEVELOPMENT · PILOT INTEREST OPEN</div>
+      <div class="h-px flex-1 bg-gradient-to-l from-transparent to-orange-500 opacity-40"></div>
+    </div>
+
+    <div class="grid lg:grid-cols-2 gap-16 items-center">
+
+      <!-- Copy -->
+      <div class="fade-up">
+        <div class="section-label mb-5" style="color:#ff6b2b; border-left-color:#ff6b2b;">Product Line 04 · Autonomous Facility Intelligence</div>
+        <h2 class="font-display font-900 text-white leading-none mb-4" style="font-size:clamp(2.5rem,5vw,4.5rem);">
+          SENTINEL<br/>
+          <span style="color:#ff6b2b">ROVER</span>
+        </h2>
+        <div class="font-display font-700 text-steel-l text-2xl mb-6 tracking-wide">
+          Not a robot dog. Not Optimus.<br/>Simple factory automation that works.
+        </div>
+        <p class="text-steel-l text-lg leading-relaxed mb-5">
+          The Sentinel Rover doesn't do backflips. It shows up every shift, runs your grease routes, clears your focal areas, scans your equipment for thermal anomalies, and logs everything it sees.
+        </p>
+        <p class="text-steel text-base leading-relaxed mb-8">
+          No operator required. No checklist missed. No bearing seized because someone forgot Tuesday's PM route. No FOD event because debris was left in a precision work cell between shifts.
+        </p>
+
+        <!-- Core capabilities -->
+        <div class="space-y-3 mb-8">
+          <div class="flex items-start gap-3">
+            <div class="w-5 h-5 flex items-center justify-center flex-shrink-0 mt-0.5" style="background:rgba(255,107,43,.15); border:1px solid rgba(255,107,43,.4);">
+              <svg class="w-3 h-3" style="color:#ff6b2b" fill="currentColor" viewBox="0 0 20 20"><path d="M16.707 5.293a1 1 0 00-1.414 0L8 12.586l-3.293-3.293a1 1 0 00-1.414 1.414l4 4a1 1 0 001.414 0l8-8a1 1 0 000-1.414z"/></svg>
+            </div>
+            <div>
+              <div class="font-display font-700 text-white text-lg">Autonomous TPM Lubrication Routes</div>
+              <div class="text-steel text-sm mt-0.5">Scheduled grease delivery to mapped points. Every interval documented. Every delivery confirmed. Maintenance engineers get their time back.</div>
+            </div>
+          </div>
+          <div class="flex items-start gap-3">
+            <div class="w-5 h-5 flex items-center justify-center flex-shrink-0 mt-0.5" style="background:rgba(255,107,43,.15); border:1px solid rgba(255,107,43,.4);">
+              <svg class="w-3 h-3" style="color:#ff6b2b" fill="currentColor" viewBox="0 0 20 20"><path d="M16.707 5.293a1 1 0 00-1.414 0L8 12.586l-3.293-3.293a1 1 0 00-1.414 1.414l4 4a1 1 0 001.414 0l8-8a1 1 0 000-1.414z"/></svg>
+            </div>
+            <div>
+              <div class="font-display font-700 text-white text-lg">Thermal Equipment Scanning</div>
+              <div class="text-steel text-sm mt-0.5">Full-spectrum thermal pass on motors, bearings, electrical panels, and drive systems. Anomalies flagged and logged before they become failures. Predictive maintenance without the enterprise software price tag.</div>
+            </div>
+          </div>
+          <div class="flex items-start gap-3">
+            <div class="w-5 h-5 flex items-center justify-center flex-shrink-0 mt-0.5" style="background:rgba(255,107,43,.15); border:1px solid rgba(255,107,43,.4);">
+              <svg class="w-3 h-3" style="color:#ff6b2b" fill="currentColor" viewBox="0 0 20 20"><path d="M16.707 5.293a1 1 0 00-1.414 0L8 12.586l-3.293-3.293a1 1 0 00-1.414 1.414l4 4a1 1 0 001.414 0l8-8a1 1 0 000-1.414z"/></svg>
+            </div>
+            <div>
+              <div class="font-display font-700 text-white text-lg">Debris Clearance & FOD Sweep</div>
+              <div class="text-steel text-sm mt-0.5">Pre-shift and post-shift sweeps of focal areas, precision work cells, and high-consequence aisles. Keeps contamination out of environments that can't tolerate it.</div>
+            </div>
+          </div>
+          <div class="flex items-start gap-3">
+            <div class="w-5 h-5 flex items-center justify-center flex-shrink-0 mt-0.5" style="background:rgba(255,107,43,.15); border:1px solid rgba(255,107,43,.4);">
+              <svg class="w-3 h-3" style="color:#ff6b2b" fill="currentColor" viewBox="0 0 20 20"><path d="M16.707 5.293a1 1 0 00-1.414 0L8 12.586l-3.293-3.293a1 1 0 00-1.414 1.414l4 4a1 1 0 001.414 0l8-8a1 1 0 000-1.414z"/></svg>
+            </div>
+            <div>
+              <div class="font-display font-700 text-white text-lg">Safety Hazard Detection</div>
+              <div class="text-steel text-sm mt-0.5">Vision-based detection of spills, obstructions, open machine guards, and misplaced tools in walkways. Supervisor alert dispatched instantly. Every hazard photographed and logged.</div>
+            </div>
+          </div>
+          <div class="flex items-start gap-3">
+            <div class="w-5 h-5 flex items-center justify-center flex-shrink-0 mt-0.5" style="background:rgba(255,107,43,.15); border:1px solid rgba(255,107,43,.4);">
+              <svg class="w-3 h-3" style="color:#ff6b2b" fill="currentColor" viewBox="0 0 20 20"><path d="M16.707 5.293a1 1 0 00-1.414 0L8 12.586l-3.293-3.293a1 1 0 00-1.414 1.414l4 4a1 1 0 001.414 0l8-8a1 1 0 000-1.414z"/></svg>
+            </div>
+            <div>
+              <div class="font-display font-700 text-white text-lg">Full Platform Integration</div>
+              <div class="text-steel text-sm mt-0.5">Rover findings feed directly into the Metered HSE platform. A detected hazard becomes an HSE log entry. A thermal anomaly triggers a maintenance work order. Every patrol. Fully documented.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right panel: rover concept + interest capture -->
+      <div class="fade-up" style="transition-delay:.15s;">
+        <!-- Rover capability panel — clean terminal style, no diagram -->
+        <div class="bg-charcoal-l border border-border relative mb-6" style="border-left:4px solid #ff6b2b;">
+          <div class="bg-charcoal-m border-b border-border px-5 py-3 flex items-center justify-between">
+            <div class="font-mono text-xs tracking-widest" style="color:#ff6b2b;">SENTINEL ROVER · SENSOR STACK</div>
+            <div class="font-mono text-xs text-steel">DEV BUILD · 2025</div>
+          </div>
+          <div class="p-6 space-y-4">
+
+            <!-- Thermal -->
+            <div class="bg-coal border border-border p-4">
+              <div class="flex items-center justify-between mb-3">
+                <div class="flex items-center gap-2">
+                  <div class="w-2 h-2 rounded-full bg-hiviz pulse-y"></div>
+                  <span class="font-mono text-xs text-hiviz tracking-widest">THERMAL ARRAY</span>
+                </div>
+                <span class="font-mono text-xs text-steel">ACTIVE SENSOR</span>
+              </div>
+              <div class="flex gap-1 mb-2">
+                <!-- Simulated thermal gradient bar -->
+                <div class="h-8 flex-1 rounded-sm" style="background:linear-gradient(90deg,#1e3a5f,#1e5f3a,#5f5f1e,#8b3a00,#cc2200,#ff6b2b);"></div>
+              </div>
+              <div class="flex justify-between">
+                <span class="font-mono text-xs text-steel">AMBIENT</span>
+                <span class="font-mono text-xs text-steel">WARM</span>
+                <span class="font-mono text-xs text-hiviz">ANOMALY ZONE</span>
+                <span class="font-mono text-xs" style="color:#ff6b2b;">CRITICAL</span>
+              </div>
+              <div class="mt-2 text-steel text-xs">Motor bearings, electrical panels, drive systems scanned continuously on patrol route.</div>
+            </div>
+
+            <!-- Vision -->
+            <div class="bg-coal border border-border p-4">
+              <div class="flex items-center justify-between mb-3">
+                <div class="flex items-center gap-2">
+                  <div class="w-2 h-2 rounded-full bg-blue-arc" style="animation:pulseA 2.3s ease-in-out infinite;"></div>
+                  <span class="font-mono text-xs text-blue-arc tracking-widest">VISION INTELLIGENCE</span>
+                </div>
+                <span class="font-mono text-xs text-steel">ACTIVE SENSOR</span>
+              </div>
+              <div class="grid grid-cols-3 gap-2 mb-2">
+                <div class="h-12 bg-charcoal-m border border-border flex items-center justify-center">
+                  <span class="font-mono text-xs text-green">CLEAR</span>
+                </div>
+                <div class="h-12 bg-charcoal-m border border-border flex items-center justify-center">
+                  <span class="font-mono text-xs text-hiviz">DEBRIS</span>
+                </div>
+                <div class="h-12 bg-charcoal-m border border-border flex items-center justify-center">
+                  <span class="font-mono text-xs text-green">CLEAR</span>
+                </div>
+              </div>
+              <div class="text-steel text-xs">FOD detection, spill identification, obstruction flagging, open guard detection.</div>
+            </div>
+
+            <!-- TPM route status -->
+            <div class="bg-coal border border-border p-4">
+              <div class="flex items-center justify-between mb-3">
+                <div class="flex items-center gap-2">
+                  <div class="w-2 h-2 rounded-full bg-green pulse"></div>
+                  <span class="font-mono text-xs text-green tracking-widest">TPM ROUTE STATUS</span>
+                </div>
+                <span class="font-mono text-xs text-steel">SHIFT 1 OF 3</span>
+              </div>
+              <div class="space-y-1.5">
+                <div class="flex items-center gap-2">
+                  <div class="flex-1 bg-charcoal-m h-2 rounded-full overflow-hidden">
+                    <div class="h-full bg-green rounded-full" style="width:100%"></div>
+                  </div>
+                  <span class="font-mono text-xs text-green w-24">LINE A · DONE</span>
+                </div>
+                <div class="flex items-center gap-2">
+                  <div class="flex-1 bg-charcoal-m h-2 rounded-full overflow-hidden">
+                    <div class="h-full bg-green rounded-full" style="width:100%"></div>
+                  </div>
+                  <span class="font-mono text-xs text-green w-24">LINE B · DONE</span>
+                </div>
+                <div class="flex items-center gap-2">
+                  <div class="flex-1 bg-charcoal-m h-2 rounded-full overflow-hidden">
+                    <div class="h-full rounded-full" style="width:60%; background:#ff6b2b;"></div>
+                  </div>
+                  <span class="font-mono text-xs w-24" style="color:#ff6b2b;">LINE C · ACTIVE</span>
+                </div>
+                <div class="flex items-center gap-2">
+                  <div class="flex-1 bg-charcoal-m h-2 rounded-full"></div>
+                  <span class="font-mono text-xs text-steel w-24">LINE D · QUEUED</span>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Pilot interest capture -->
+        <div class="bg-coal p-6" style="border:1px solid rgba(255,107,43,.3); border-left:4px solid #ff6b2b;">
+          <div class="font-mono text-xs tracking-widest mb-3" style="color:#ff6b2b;">REGISTER PILOT INTEREST</div>
+          <p class="text-steel text-sm leading-relaxed mb-4">Early adopters shape the build. Register your facility now and lock pilot pricing before general availability.</p>
+          <div class="flex gap-3">
+            <a href="mailto:YOUR_GMAIL_HERE@gmail.com?subject=Sentinel Rover Pilot Interest" class="flex-1 text-center font-display font-800 text-sm tracking-widest uppercase py-3 px-4 transition-all" style="background:#ff6b2b; color:#141618; clip-path:polygon(0 0,calc(100% - 8px) 0,100% 8px,100% 100%,8px 100%,0 calc(100% - 8px));">
+              Register Interest
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- The bigger picture callout -->
+    <div class="mt-14 fade-up">
+      <div class="bg-charcoal-l border border-border p-8" style="border-top:4px solid #ff6b2b;">
+        <div class="grid md:grid-cols-4 gap-6 text-center">
+          <div>
+            <div class="font-display font-900 text-white mb-1" style="font-size:2.5rem; line-height:1;">$50B</div>
+            <div class="text-steel text-sm">Annual unplanned downtime cost in US manufacturing</div>
+          </div>
+          <div>
+            <div class="font-display font-900 mb-1" style="font-size:2.5rem; line-height:1; color:#ff6b2b;">78%</div>
+            <div class="text-steel text-sm">Of bearing failures traceable to improper lubrication</div>
+          </div>
+          <div>
+            <div class="font-display font-900 text-hiviz mb-1" style="font-size:2.5rem; line-height:1;">$0</div>
+            <div class="text-steel text-sm">Additional headcount required to run grease routes</div>
+          </div>
+          <div>
+            <div class="font-display font-900 text-green mb-1" style="font-size:2.5rem; line-height:1;">24/7</div>
+            <div class="text-steel text-sm">Autonomous patrol. Every shift. Every route. Logged.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<div class="hazard"></div>
+
+<!-- ═══════════════════════ WHY RIVER ROCK ═══════════════════════ -->
+<section class="py-28 relative">
+  <div class="max-w-7xl mx-auto px-6">
+    <div class="text-center mb-16 fade-up">
+      <div class="section-label inline-block">Why River Rock Robotics</div>
+      <h2 class="font-display font-900 text-white leading-none" style="font-size:clamp(2.5rem,5vw,4.5rem);">
+        BUILT DIFFERENT.<br/>
+        <span class="text-hiviz">ON PURPOSE.</span>
+      </h2>
+    </div>
+    <div class="grid md:grid-cols-3 gap-6">
+      <div class="card p-7 text-center fade-up">
+        <div class="font-display font-900 text-hiviz mb-3" style="font-size:3.5rem; line-height:1;">NON-<br/>INVASIVE</div>
+        <div class="text-steel leading-relaxed">Every system we build attaches without modification. Your certifications, your infrastructure, and your existing equipment are never at risk from a River Rock deployment.</div>
+      </div>
+      <div class="card card-green p-7 text-center fade-up" style="transition-delay:.1s">
+        <div class="font-display font-900 text-green mb-3" style="font-size:3.5rem; line-height:1;">AUDIT-<br/>READY</div>
+        <div class="text-steel leading-relaxed">Every event across every product line is cryptographically timestamped, operator-attributed, and tamper-evident. When an inspector walks in, you're ready before they ask the first question.</div>
+      </div>
+      <div class="card card-blue p-7 text-center fade-up" style="transition-delay:.2s">
+        <div class="font-display font-900 text-blue-arc mb-3" style="font-size:3.5rem; line-height:1;">HUMAN-<br/>PROOF</div>
+        <div class="text-steel leading-relaxed">We don't build systems that ask workers to remember steps. We build systems that make the compliant path the only path. That's the difference between training and engineering.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="hazard"></div>
+
+<!-- ═══════════════════════ CTA + CONTACT FORM ═══════════════════════ -->
+<section id="contact" class="py-28 bg-charcoal-l relative overflow-hidden">
+  <div class="absolute inset-0 grid-bg-dense opacity-50"></div>
+  <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[900px] h-[400px] rounded-full" style="background:radial-gradient(ellipse,rgba(245,196,0,.06) 0%,transparent 70%);"></div>
+  <div class="relative max-w-6xl mx-auto px-6">
+
+    <div class="text-center mb-14 fade-up">
+      <div class="font-mono text-xs text-hiviz tracking-widest mb-6">SITE ASSESSMENTS · PILOT PROGRAMS · DEMO REQUESTS</div>
+      <h2 class="font-display font-900 text-white leading-none mb-6" style="font-size:clamp(2.5rem,5.5vw,5rem);">
+        ONE CALL.<br/>
+        <span class="text-hiviz">EVERY SOLUTION.</span><br/>
+        ZERO EXCUSES<br/>FOR HUMAN ERROR.
+      </h2>
+      <p class="text-steel-l text-xl leading-relaxed mb-2 max-w-2xl mx-auto">
+        Whether you need one product line or the full integrated platform, River Rock deploys fast, proves ROI immediately, and never touches a bolt on your existing equipment.
+      </p>
+      <p class="text-steel text-base max-w-xl mx-auto">
+        Tell us about your facility. A River Rock application engineer will respond within one business day.
+      </p>
+    </div>
+
+    <div class="grid lg:grid-cols-2 gap-12 items-start">
+
+      <!-- Contact form -->
+      <div class="corner-mark bg-coal border border-border p-8 fade-up">
+        <div class="font-mono text-xs text-hiviz tracking-widest mb-6">SEND US A MESSAGE</div>
+        <form id="contactForm" onsubmit="handleSubmit(event)" class="space-y-4">
+          <div class="grid grid-cols-2 gap-4">
+            <div>
+              <label class="font-mono text-xs text-steel tracking-widest block mb-2">FIRST NAME</label>
+              <input type="text" id="fname" required placeholder="Jane"
+                class="w-full bg-charcoal-m border border-border px-4 py-3 text-white text-sm font-body focus:outline-none focus:border-hiviz transition-colors"
+                style="clip-path:polygon(0 0,calc(100% - 6px) 0,100% 6px,100% 100%,6px 100%,0 calc(100% - 6px));">
+            </div>
+            <div>
+              <label class="font-mono text-xs text-steel tracking-widest block mb-2">LAST NAME</label>
+              <input type="text" id="lname" required placeholder="Smith"
+                class="w-full bg-charcoal-m border border-border px-4 py-3 text-white text-sm font-body focus:outline-none focus:border-hiviz transition-colors"
+                style="clip-path:polygon(0 0,calc(100% - 6px) 0,100% 6px,100% 100%,6px 100%,0 calc(100% - 6px));">
+            </div>
+          </div>
+          <div>
+            <label class="font-mono text-xs text-steel tracking-widest block mb-2">COMPANY / FACILITY</label>
+            <input type="text" id="company" required placeholder="Acme Manufacturing"
+              class="w-full bg-charcoal-m border border-border px-4 py-3 text-white text-sm font-body focus:outline-none focus:border-hiviz transition-colors"
+              style="clip-path:polygon(0 0,calc(100% - 6px) 0,100% 6px,100% 100%,6px 100%,0 calc(100% - 6px));">
+          </div>
+          <div>
+            <label class="font-mono text-xs text-steel tracking-widest block mb-2">EMAIL ADDRESS</label>
+            <input type="email" id="email" required placeholder="jane@facility.com"
+              class="w-full bg-charcoal-m border border-border px-4 py-3 text-white text-sm font-body focus:outline-none focus:border-hiviz transition-colors"
+              style="clip-path:polygon(0 0,calc(100% - 6px) 0,100% 6px,100% 100%,6px 100%,0 calc(100% - 6px));">
+          </div>
+          <div>
+            <label class="font-mono text-xs text-steel tracking-widest block mb-2">PHONE (OPTIONAL)</label>
+            <input type="tel" id="phone" placeholder="(555) 000-0000"
+              class="w-full bg-charcoal-m border border-border px-4 py-3 text-white text-sm font-body focus:outline-none focus:border-hiviz transition-colors"
+              style="clip-path:polygon(0 0,calc(100% - 6px) 0,100% 6px,100% 100%,6px 100%,0 calc(100% - 6px));">
+          </div>
+          <div>
+            <label class="font-mono text-xs text-steel tracking-widest block mb-2">PRODUCT INTEREST</label>
+            <select id="product"
+              class="w-full bg-charcoal-m border border-border px-4 py-3 text-steel-l text-sm font-body focus:outline-none focus:border-hiviz transition-colors"
+              style="clip-path:polygon(0 0,calc(100% - 6px) 0,100% 6px,100% 100%,6px 100%,0 calc(100% - 6px));">
+              <option value="All Products">Full Platform — All Products</option>
+              <option value="Snap-Mount Cabinet System">Snap-Mount Cabinet System</option>
+              <option value="Metered HSE Software">Metered HSE Software</option>
+              <option value="ToolTrack Intelligence">ToolTrack Intelligence</option>
+              <option value="Sentinel Rover">Sentinel Rover — Pilot Interest</option>
+            </select>
+          </div>
+          <div>
+            <label class="font-mono text-xs text-steel tracking-widest block mb-2">TELL US ABOUT YOUR FACILITY</label>
+            <textarea id="message" rows="4" placeholder="Number of cabinets, facility type, key challenges..."
+              class="w-full bg-charcoal-m border border-border px-4 py-3 text-white text-sm font-body focus:outline-none focus:border-hiviz transition-colors resize-none"
+              style="clip-path:polygon(0 0,calc(100% - 6px) 0,100% 6px,100% 100%,6px 100%,0 calc(100% - 6px));"></textarea>
+          </div>
+          <button type="submit" class="btn-cta w-full text-base" style="padding:1rem;">
+            Send Message →
+          </button>
+        </form>
+        <div id="formSuccess" class="hidden mt-4 bg-green/10 border border-green/30 p-4 text-center">
+          <div class="font-display font-700 text-green text-lg mb-1">Message Sent.</div>
+          <div class="text-steel text-sm">We'll be in touch within one business day.</div>
+        </div>
+      </div>
+
+      <!-- Right: contact info + product links -->
+      <div class="space-y-6 fade-up" style="transition-delay:.15s;">
+
+        <!-- Direct contact -->
+        <div class="bg-coal border border-border p-6">
+          <div class="font-mono text-xs text-hiviz tracking-widest mb-4">DIRECT CONTACT</div>
+          <a href="mailto:YOUR_GMAIL_HERE@gmail.com"
+            class="flex items-center gap-3 text-steel-l hover:text-hiviz transition-colors mb-3 group">
+            <div class="w-8 h-8 bg-hiviz/10 border border-hiviz/30 flex items-center justify-center flex-shrink-0 group-hover:bg-hiviz/20 transition-colors">
+              <svg class="w-4 h-4 text-hiviz" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+            </div>
+            <span class="font-body text-sm">info@riverrockrobotics.com</span>
+          </a>
+          <div class="text-steel text-xs mt-3 font-mono tracking-wide">RESPONSE TIME: &lt; 1 BUSINESS DAY</div>
+        </div>
+
+        <!-- What to expect -->
+        <div class="bg-coal border border-border p-6">
+          <div class="font-mono text-xs text-hiviz tracking-widest mb-4">WHAT HAPPENS NEXT</div>
+          <div class="space-y-4">
+            <div class="flex items-start gap-3">
+              <div class="font-display font-900 text-hiviz text-2xl leading-none flex-shrink-0 w-6">1</div>
+              <div class="text-steel text-sm leading-relaxed">We review your facility details and identify your highest human-error exposure points.</div>
+            </div>
+            <div class="flex items-start gap-3">
+              <div class="font-display font-900 text-hiviz text-2xl leading-none flex-shrink-0 w-6">2</div>
+              <div class="text-steel text-sm leading-relaxed">We recommend the right product line or combination for your operation and budget.</div>
+            </div>
+            <div class="flex items-start gap-3">
+              <div class="font-display font-900 text-hiviz text-2xl leading-none flex-shrink-0 w-6">3</div>
+              <div class="text-steel text-sm leading-relaxed">Pilot program scoped, hardware shipped, system live — typically within the same week.</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Product quick links -->
+        <div class="grid grid-cols-2 gap-3">
+          <a href="#cabinet" class="bg-coal border border-border hover:border-hiviz p-4 transition-colors group">
+            <div class="font-mono text-xs text-hiviz tracking-widest mb-1">SNAP-MOUNT</div>
+            <div class="font-display font-700 text-white text-base">Cabinet System</div>
+          </a>
+          <a href="#safety" class="bg-coal border border-border hover:border-green p-4 transition-colors group">
+            <div class="font-mono text-xs text-green tracking-widest mb-1">METERED HSE</div>
+            <div class="font-display font-700 text-white text-base">Safety Software</div>
+          </a>
+          <a href="#tool" class="bg-coal border border-border p-4 transition-colors" onmouseover="this.style.borderColor='#38bdf8'" onmouseout="this.style.borderColor=''">
+            <div class="font-mono text-xs tracking-widest mb-1" style="color:#38bdf8;">TOOLTRACK</div>
+            <div class="font-display font-700 text-white text-base">Tool Accountability</div>
+          </a>
+          <a href="#rover" class="bg-coal border p-4 transition-colors" style="border-color:rgba(255,107,43,.4);" onmouseover="this.style.borderColor='#ff6b2b'" onmouseout="this.style.borderColor='rgba(255,107,43,.4)'">
+            <div class="font-mono text-xs tracking-widest mb-1" style="color:#ff6b2b;">ROVER ↗</div>
+            <div class="font-display font-700 text-white text-base">Sentinel Patrol</div>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+function handleSubmit(e) {
+  e.preventDefault();
+  const fname   = document.getElementById('fname').value;
+  const lname   = document.getElementById('lname').value;
+  const company = document.getElementById('company').value;
+  const email   = document.getElementById('email').value;
+  const phone   = document.getElementById('phone').value || 'Not provided';
+  const product = document.getElementById('product').value;
+  const message = document.getElementById('message').value || 'No message provided';
+
+  const subject = encodeURIComponent(`River Rock Inquiry — ${product} — ${company}`);
+  const body = encodeURIComponent(
+`New inquiry from River Rock Robotics website
+
+Name:     ${fname} ${lname}
+Company:  ${company}
+Email:    ${email}
+Phone:    ${phone}
+Interest: ${product}
+
+Message:
+${message}`
+  );
+
+  window.location.href = `mailto:YOUR_GMAIL_HERE@gmail.com?subject=${subject}&body=${body}`;
+
+  document.getElementById('contactForm').classList.add('hidden');
+  document.getElementById('formSuccess').classList.remove('hidden');
+}
+</script>
+
+<!-- ═══════════════════════ FOOTER ═══════════════════════ -->
+<footer class="bg-coal border-t border-border">
+  <div class="hazard opacity-50"></div>
+  <div class="max-w-7xl mx-auto px-6 py-14">
+    <div class="grid md:grid-cols-4 gap-10 mb-10">
+      <!-- Brand -->
+      <div class="md:col-span-1">
+        <div class="flex items-center gap-3 mb-5">
+          <div class="relative w-10 h-10 flex-shrink-0">
+            <div class="absolute inset-0 border-2 border-hiviz rotate-45"></div>
+            <div class="absolute inset-2 bg-hiviz rotate-45"></div>
+          </div>
+          <div>
+            <div class="font-display font-800 text-white text-xl leading-tight tracking-wide">RIVER ROCK</div>
+            <div class="font-mono text-hiviz text-xs tracking-widest leading-none">ROBOTICS</div>
+          </div>
+        </div>
+        <p class="text-steel text-sm leading-relaxed">
+          Industrial intelligence systems engineered for the American shop floor. Non-invasive. Audit-ready. Human-proof.
+        </p>
+      </div>
+
+      <!-- Products -->
+      <div>
+        <div class="font-mono text-xs text-hiviz tracking-widest mb-4">PRODUCTS</div>
+        <ul class="space-y-2">
+          <li><a href="#cabinet" class="text-steel text-sm hover:text-hiviz transition-colors">Snap-Mount Cabinet System</a></li>
+          <li><a href="#safety"  class="text-steel text-sm hover:text-green transition-colors">Metered HSE Software</a></li>
+          <li><a href="#tool"    class="text-steel text-sm hover:text-blue-arc transition-colors">ToolTrack Intelligence</a></li>
+          <li><a href="#rover"   class="text-sm transition-colors" style="color:rgba(255,107,43,.7);">Sentinel Rover ↗ Coming</a></li>
+          <li><a href="#platform" class="text-steel text-sm hover:text-hiviz transition-colors">Unified Command Center</a></li>
+        </ul>
+      </div>
+
+      <!-- Capabilities -->
+      <div>
+        <div class="font-mono text-xs text-hiviz tracking-widest mb-4">CAPABILITIES</div>
+        <ul class="space-y-2">
+          <li class="text-steel text-sm">Edge Intelligence Terminals</li>
+          <li class="text-steel text-sm">Asynchronous Neural Inference</li>
+          <li class="text-steel text-sm">Encrypted Mesh Infrastructure</li>
+          <li class="text-steel text-sm">Modular Access Control</li>
+          <li class="text-steel text-sm">Vision-Verified Tool Accountability</li>
+          <li class="text-steel text-sm">OSHA/GHS Compliance Automation</li>
+        </ul>
+      </div>
+
+      <!-- Contact -->
+      <div>
+        <div class="font-mono text-xs text-hiviz tracking-widest mb-4">CONTACT</div>
+        <ul class="space-y-2 mb-5">
+          <li><a href="#contact" class="text-steel text-sm hover:text-hiviz transition-colors">Request a Demo</a></li>
+          <li><a href="#contact" class="text-steel text-sm hover:text-hiviz transition-colors">Schedule Site Assessment</a></li>
+          <li><a href="#contact" class="text-steel text-sm hover:text-hiviz transition-colors">Partner Program</a></li>
+          <li><a href="#contact" class="text-steel text-sm hover:text-hiviz transition-colors">Technical Documentation</a></li>
+        </ul>
+        <a href="#contact" class="btn-cta text-sm py-2.5 px-5">Contact Sales</a>
+      </div>
+    </div>
+
+    <div class="border-t border-border pt-8 flex flex-col md:flex-row items-center justify-between gap-4">
+      <div class="font-display font-800 text-hiviz text-xl tracking-widest uppercase">
+        Built for the American Shop Floor.
+      </div>
+      <div class="font-mono text-xs text-steel tracking-wide text-center">
+        © 2025 River Rock Robotics · All Rights Reserved · Patent Pending · Built for the American Shop Floor.
+      </div>
+    </div>
+  </div>
+  <div class="hazard opacity-30"></div>
+</footer>
+
+<script>
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('vis'); });
+  }, { threshold: 0.1 });
+  document.querySelectorAll('.fade-up').forEach(el => obs.observe(el));
+</script>
+</body>
+</html>
