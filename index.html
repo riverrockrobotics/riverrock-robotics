@@ -1055,7 +1055,7 @@
           <div class="font-mono text-xs tracking-widest mb-3" style="color:#ff6b2b;">REGISTER PILOT INTEREST</div>
           <p class="text-steel text-sm leading-relaxed mb-4">Early adopters shape the build. Register your facility now and lock pilot pricing before general availability.</p>
           <div class="flex gap-3">
-            <a href="mailto:YOUR_GMAIL_HERE@gmail.com?subject=Sentinel Rover Pilot Interest" class="flex-1 text-center font-display font-800 text-sm tracking-widest uppercase py-3 px-4 transition-all" style="background:#ff6b2b; color:#141618; clip-path:polygon(0 0,calc(100% - 8px) 0,100% 8px,100% 100%,8px 100%,0 calc(100% - 8px));">
+            <a href="#contact" class="flex-1 text-center font-display font-800 text-sm tracking-widest uppercase py-3 px-4 transition-all" style="background:#ff6b2b; color:#141618; clip-path:polygon(0 0,calc(100% - 8px) 0,100% 8px,100% 100%,8px 100%,0 calc(100% - 8px));">
               Register Interest
             </a>
           </div>
@@ -1147,42 +1147,42 @@
       <!-- Contact form -->
       <div class="corner-mark bg-coal border border-border p-8 fade-up">
         <div class="font-mono text-xs text-hiviz tracking-widest mb-6">SEND US A MESSAGE</div>
-        <form id="contactForm" onsubmit="handleSubmit(event)" class="space-y-4">
+        <form id="contactForm" action="https://formspree.io/f/mdajloyq" method="POST" class="space-y-4">
           <div class="grid grid-cols-2 gap-4">
             <div>
               <label class="font-mono text-xs text-steel tracking-widest block mb-2">FIRST NAME</label>
-              <input type="text" id="fname" required placeholder="Jane"
+              <input type="text" id="fname" name="fname" required placeholder="Jane"
                 class="w-full bg-charcoal-m border border-border px-4 py-3 text-white text-sm font-body focus:outline-none focus:border-hiviz transition-colors"
                 style="clip-path:polygon(0 0,calc(100% - 6px) 0,100% 6px,100% 100%,6px 100%,0 calc(100% - 6px));">
             </div>
             <div>
               <label class="font-mono text-xs text-steel tracking-widest block mb-2">LAST NAME</label>
-              <input type="text" id="lname" required placeholder="Smith"
+              <input type="text" id="lname" name="lname" required placeholder="Smith"
                 class="w-full bg-charcoal-m border border-border px-4 py-3 text-white text-sm font-body focus:outline-none focus:border-hiviz transition-colors"
                 style="clip-path:polygon(0 0,calc(100% - 6px) 0,100% 6px,100% 100%,6px 100%,0 calc(100% - 6px));">
             </div>
           </div>
           <div>
             <label class="font-mono text-xs text-steel tracking-widest block mb-2">COMPANY / FACILITY</label>
-            <input type="text" id="company" required placeholder="Acme Manufacturing"
+            <input type="text" id="company" name="company" required placeholder="Acme Manufacturing"
               class="w-full bg-charcoal-m border border-border px-4 py-3 text-white text-sm font-body focus:outline-none focus:border-hiviz transition-colors"
               style="clip-path:polygon(0 0,calc(100% - 6px) 0,100% 6px,100% 100%,6px 100%,0 calc(100% - 6px));">
           </div>
           <div>
             <label class="font-mono text-xs text-steel tracking-widest block mb-2">EMAIL ADDRESS</label>
-            <input type="email" id="email" required placeholder="jane@facility.com"
+            <input type="email" id="email" name="email" required placeholder="jane@facility.com"
               class="w-full bg-charcoal-m border border-border px-4 py-3 text-white text-sm font-body focus:outline-none focus:border-hiviz transition-colors"
               style="clip-path:polygon(0 0,calc(100% - 6px) 0,100% 6px,100% 100%,6px 100%,0 calc(100% - 6px));">
           </div>
           <div>
             <label class="font-mono text-xs text-steel tracking-widest block mb-2">PHONE (OPTIONAL)</label>
-            <input type="tel" id="phone" placeholder="(555) 000-0000"
+            <input type="tel" id="phone" name="phone" placeholder="(555) 000-0000"
               class="w-full bg-charcoal-m border border-border px-4 py-3 text-white text-sm font-body focus:outline-none focus:border-hiviz transition-colors"
               style="clip-path:polygon(0 0,calc(100% - 6px) 0,100% 6px,100% 100%,6px 100%,0 calc(100% - 6px));">
           </div>
           <div>
             <label class="font-mono text-xs text-steel tracking-widest block mb-2">PRODUCT INTEREST</label>
-            <select id="product"
+            <select id="product" name="product"
               class="w-full bg-charcoal-m border border-border px-4 py-3 text-steel-l text-sm font-body focus:outline-none focus:border-hiviz transition-colors"
               style="clip-path:polygon(0 0,calc(100% - 6px) 0,100% 6px,100% 100%,6px 100%,0 calc(100% - 6px));">
               <option value="All Products">Full Platform — All Products</option>
@@ -1194,7 +1194,7 @@
           </div>
           <div>
             <label class="font-mono text-xs text-steel tracking-widest block mb-2">TELL US ABOUT YOUR FACILITY</label>
-            <textarea id="message" rows="4" placeholder="Number of cabinets, facility type, key challenges..."
+            <textarea id="message" name="message" rows="4" placeholder="Number of cabinets, facility type, key challenges..."
               class="w-full bg-charcoal-m border border-border px-4 py-3 text-white text-sm font-body focus:outline-none focus:border-hiviz transition-colors resize-none"
               style="clip-path:polygon(0 0,calc(100% - 6px) 0,100% 6px,100% 100%,6px 100%,0 calc(100% - 6px));"></textarea>
           </div>
@@ -1214,7 +1214,7 @@
         <!-- Direct contact -->
         <div class="bg-coal border border-border p-6">
           <div class="font-mono text-xs text-hiviz tracking-widest mb-4">DIRECT CONTACT</div>
-          <a href="mailto:YOUR_GMAIL_HERE@gmail.com"
+          <a href="mailto:info@riverrockrobotics.com"
             class="flex items-center gap-3 text-steel-l hover:text-hiviz transition-colors mb-3 group">
             <div class="w-8 h-8 bg-hiviz/10 border border-hiviz/30 flex items-center justify-center flex-shrink-0 group-hover:bg-hiviz/20 transition-colors">
               <svg class="w-4 h-4 text-hiviz" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
@@ -1268,35 +1268,20 @@
 </section>
 
 <script>
-function handleSubmit(e) {
+document.getElementById('contactForm').addEventListener('submit', async function(e) {
   e.preventDefault();
-  const fname   = document.getElementById('fname').value;
-  const lname   = document.getElementById('lname').value;
-  const company = document.getElementById('company').value;
-  const email   = document.getElementById('email').value;
-  const phone   = document.getElementById('phone').value || 'Not provided';
-  const product = document.getElementById('product').value;
-  const message = document.getElementById('message').value || 'No message provided';
-
-  const subject = encodeURIComponent(`River Rock Inquiry — ${product} — ${company}`);
-  const body = encodeURIComponent(
-`New inquiry from River Rock Robotics website
-
-Name:     ${fname} ${lname}
-Company:  ${company}
-Email:    ${email}
-Phone:    ${phone}
-Interest: ${product}
-
-Message:
-${message}`
-  );
-
-  window.location.href = `mailto:YOUR_GMAIL_HERE@gmail.com?subject=${subject}&body=${body}`;
-
-  document.getElementById('contactForm').classList.add('hidden');
-  document.getElementById('formSuccess').classList.remove('hidden');
-}
+  const form = e.target;
+  const data = new FormData(form);
+  const response = await fetch('https://formspree.io/f/mdajloyq', {
+    method: 'POST',
+    body: data,
+    headers: { 'Accept': 'application/json' }
+  });
+  if (response.ok) {
+    form.classList.add('hidden');
+    document.getElementById('formSuccess').classList.remove('hidden');
+  }
+});
 </script>
 
 <!-- ═══════════════════════ FOOTER ═══════════════════════ -->
