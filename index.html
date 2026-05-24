@@ -225,7 +225,6 @@
       <a href="#safety"    class="text-steel-l text-sm hover:text-hiviz transition-colors font-body font-500 tracking-wide">Safety Software</a>
       <a href="#tool"      class="text-steel-l text-sm hover:text-hiviz transition-colors font-body font-500 tracking-wide">ToolTrack</a>
       <a href="#pricing"   class="text-steel-l text-sm hover:text-hiviz transition-colors font-body font-500 tracking-wide">Pricing</a>
-      <a href="#rover"     class="text-sm font-body font-500 tracking-wide transition-colors" style="color:#ff6b2b;">Sentinel Rover</a>
       <a href="#contact" class="btn-cta text-sm py-2 px-5">Request Demo</a>
     </div>
   </div>
@@ -279,7 +278,7 @@
         <a href="#cabinet" class="prod-pill prod-cabinet" style="--accent:#f5c400;--accentRGB:245,196,0">Snap-Mount Cabinet System</a>
         <a href="#safety"  class="prod-pill prod-safety"  style="--accent:#22c55e;--accentRGB:34,197,94">Metered HSE Software</a>
         <a href="#tool"    class="prod-pill prod-tool"    style="--accent:#38bdf8;--accentRGB:56,189,248">ToolTrack Intelligence</a>
-        <a href="#rover"   class="prod-pill" style="--accent:#ff6b2b;--accentRGB:255,107,43; border-color:#ff6b2b; color:#ff6b2b;">Sentinel Rover ↗ Coming</a>
+        <a href="#rover"   class="font-mono text-xs tracking-widest transition-colors" style="color:rgba(255,107,43,.55); padding:.5rem 0; border:none; background:none; cursor:pointer; display:inline-block;">Sentinel Rover ↗ In Dev</a>
       </div>
     </div>
   </div>
@@ -419,62 +418,65 @@
       </div>
     </div>
 
-    <!-- Feature grid -->
-    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-14">
+    <!-- Buyer Q&A -->
+    <div class="grid md:grid-cols-2 gap-5 mb-14">
 
-      <!-- Zero Drill -->
+      <!-- Q1 -->
       <div class="card p-6 fade-up">
-        <div class="w-10 h-10 bg-hiviz/10 border border-hiviz/30 flex items-center justify-center mb-4">
-          <svg class="w-5 h-5 text-hiviz" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
-        </div>
-        <div class="font-display font-800 text-white text-xl mb-2">Zero-Drill Mandate</div>
-        <div class="text-steel text-sm leading-relaxed">Industrial-grade magnetic-mount architecture preserves UL/FM fire ratings and chemical storage certifications. No permit. No facilities ticket. No voided approvals.</div>
+        <div class="font-mono text-xs text-hiviz tracking-widest mb-3">01 · WHAT DOES IT ATTACH TO?</div>
+        <div class="font-display font-700 text-white text-lg mb-2">Physical mounting</div>
+        <div class="text-steel text-sm leading-relaxed">Attaches magnetically to most steel industrial cabinets with no drilling, bolts, or permanent modification.</div>
       </div>
 
-      <!-- Scan to Silence -->
-      <div class="card p-6 fade-up" style="transition-delay:.08s">
-        <div class="w-10 h-10 bg-hiviz/10 border border-hiviz/30 flex items-center justify-center mb-4">
-          <svg class="w-5 h-5 text-hiviz" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
-        </div>
-        <div class="font-display font-800 text-white text-xl mb-2">Scan-to-Silence Workflow</div>
-        <div class="text-steel text-sm leading-relaxed">Visual and audible cues create a closed-loop that creates a workflow that makes compliance the path of least resistance — near-complete data capture at point of access, every time, for every operator.</div>
+      <!-- Q2 -->
+      <div class="card p-6 fade-up" style="transition-delay:.06s">
+        <div class="font-mono text-xs text-hiviz tracking-widest mb-3">02 · WHAT PROBLEM DOES IT SOLVE TODAY?</div>
+        <div class="font-display font-700 text-white text-lg mb-2">The accountability gap</div>
+        <div class="text-steel text-sm leading-relaxed">Most facilities have no record of who accessed a chemical cabinet, what they took, or whether they ever looked at the SDS. River Rock closes that gap at the point of access — automatically.</div>
       </div>
 
-      <!-- Tiered Access -->
-      <div class="card p-6 fade-up" style="transition-delay:.16s">
-        <div class="w-10 h-10 bg-hiviz/10 border border-hiviz/30 flex items-center justify-center mb-4">
-          <svg class="w-5 h-5 text-hiviz" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
-        </div>
-        <div class="font-display font-800 text-white text-xl mb-2">Modular Access Control</div>
-        <div class="text-steel text-sm leading-relaxed">Level 1 behavioral workflow for standard assets. Level 2 badge-release magnetic-lock for high-consequence materials. Tiered roles: Operator / Supervisor / Admin.</div>
+      <!-- Q3 -->
+      <div class="card p-6 fade-up" style="transition-delay:.12s">
+        <div class="font-mono text-xs text-hiviz tracking-widest mb-3">03 · DOES IT PRESERVE CABINET CERTIFICATIONS?</div>
+        <div class="font-display font-700 text-white text-lg mb-2">No physical modification</div>
+        <div class="text-steel text-sm leading-relaxed">Designed to avoid physical modification of the cabinet, helping preserve existing UL/FM fire-rating and chemical-storage certification considerations. Final approval remains subject to your site's safety requirements.</div>
       </div>
 
-      <!-- GHS Vision -->
+      <!-- Q4 -->
+      <div class="card p-6 fade-up" style="transition-delay:.18s">
+        <div class="font-mono text-xs text-hiviz tracking-widest mb-3">04 · HOW DOES SDS ACCESS WORK?</div>
+        <div class="font-display font-700 text-white text-lg mb-2">At the threshold, before the item leaves</div>
+        <div class="text-steel text-sm leading-relaxed">When an item is identified at the cabinet threshold, the relevant SDS can be pushed to the worker's registered device or displayed at the cabinet before the item leaves the area.</div>
+      </div>
+
+      <!-- Q5 -->
       <div class="card p-6 fade-up" style="transition-delay:.24s">
-        <div class="w-10 h-10 bg-hiviz/10 border border-hiviz/30 flex items-center justify-center mb-4">
-          <svg class="w-5 h-5 text-hiviz" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17H3a2 2 0 01-2-2V5a2 2 0 012-2h14a2 2 0 012 2v10a2 2 0 01-2 2h-2"/></svg>
-        </div>
-        <div class="font-display font-800 text-white text-xl mb-2">Threshold Vision Intelligence</div>
-        <div class="text-steel text-sm leading-relaxed">Onboard Neural Processing Unit verifies GHS pictograms and labels at the cabinet threshold in under 200ms. Safety Data Sheets are auto-pushed to the worker's device on identification.</div>
+        <div class="font-mono text-xs text-hiviz tracking-widest mb-3">05 · WHAT GETS LOGGED?</div>
+        <div class="font-display font-700 text-white text-lg mb-2">Every access event</div>
+        <div class="text-steel text-sm leading-relaxed">Badge ID, timestamp, cabinet, item identified, SDS delivery, and deviation evidence when required. Every event. Every time.</div>
       </div>
 
-      <!-- Tamper -->
-      <div class="card p-6 fade-up" style="transition-delay:.32s">
-        <div class="w-10 h-10 bg-hiviz/10 border border-hiviz/30 flex items-center justify-center mb-4">
-          <svg class="w-5 h-5 text-hiviz" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
-        </div>
-        <div class="font-display font-800 text-white text-xl mb-2">Hard-Site Integrity</div>
-        <div class="text-steel text-sm leading-relaxed">Tri-axis brute-force tamper detection. Supervisor SMS dispatched within 4 seconds of a tamper event. All attempts are cryptographically logged and irreversible by field personnel.</div>
+      <!-- Q6 -->
+      <div class="card p-6 fade-up" style="transition-delay:.30s">
+        <div class="font-mono text-xs text-hiviz tracking-widest mb-3">06 · WHO GETS ALERTS?</div>
+        <div class="font-display font-700 text-white text-lg mb-2">The right people, automatically</div>
+        <div class="text-steel text-sm leading-relaxed">Designated supervisors and safety leads receive alert notifications for tamper attempts, overdue items, and deviation events. Notification routing is configurable by role and facility.</div>
       </div>
 
-      <!-- Hybrid Comms -->
-      <div class="card p-6 fade-up" style="transition-delay:.40s">
-        <div class="w-10 h-10 bg-hiviz/10 border border-hiviz/30 flex items-center justify-center mb-4">
-          <svg class="w-5 h-5 text-hiviz" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.111 16.404a5.5 5.5 0 017.778 0M12 20h.01m-7.08-7.071c3.904-3.905 10.236-3.905 14.141 0M1.394 9.393c5.857-5.857 15.355-5.857 21.213 0"/></svg>
-        </div>
-        <div class="font-display font-800 text-white text-xl mb-2">Hybrid Comms Infrastructure</div>
-        <div class="text-steel text-sm leading-relaxed">Enterprise WiFi 6 with WPA3 for connected facilities. Self-healing AES-256 Private Mesh Nodes for remote or RF-challenged environments. Your facility's security posture drives the choice.</div>
+      <!-- Q7 -->
+      <div class="card p-6 fade-up" style="transition-delay:.36s">
+        <div class="font-mono text-xs text-hiviz tracking-widest mb-3">07 · CAN WE START WITH ONE CABINET?</div>
+        <div class="font-display font-700 text-white text-lg mb-2">Yes — that's the standard starting point</div>
+        <div class="text-steel text-sm leading-relaxed">A single cabinet pilot is how most deployments begin. Hardware ships to your facility, mounts in under 10 minutes, and is logging the same day.</div>
       </div>
+
+      <!-- Q8 -->
+      <div class="card p-6 fade-up" style="transition-delay:.42s">
+        <div class="font-mono text-xs text-hiviz tracking-widest mb-3">08 · WHAT DOES A PILOT LOOK LIKE?</div>
+        <div class="font-display font-700 text-white text-lg mb-2">30 days. Real data. Defined criteria.</div>
+        <div class="text-steel text-sm leading-relaxed">One cabinet, one defined workflow, 30 days of real usage data. We agree on success criteria up front, then you evaluate access records, SDS delivery, alerts, and audit exports before any broader rollout.</div>
+      </div>
+
     </div>
 
     <!-- cert row -->
@@ -866,228 +868,46 @@
   </div>
 </section>
 
-<div class="hazard"></div>
+<!-- ═══════════════════════ WHAT'S NEXT — SENTINEL ROVER ═══════════════════════ -->
+<section id="rover" class="py-16 relative">
+  <div class="max-w-7xl mx-auto px-6">
+    <div class="bg-charcoal-l border border-border p-8 md:p-10 fade-up" style="border-top:3px solid rgba(255,107,43,.6);">
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-8">
 
-<!-- ═══════════════════════════════════════════════════════
-     PRODUCT 4 — SENTINEL ROVER (COMING)
-═══════════════════════════════════════════════════════ -->
-<section id="rover" class="py-28 relative overflow-hidden" style="--accent:#ff6b2b;--accentRGB:255,107,43;">
-  <div class="absolute inset-0 grid-bg opacity-30"></div>
-  <!-- Atmospheric glow -->
-  <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[500px] rounded-full" style="background:radial-gradient(ellipse,rgba(255,107,43,.07) 0%,transparent 70%);"></div>
-
-  <div class="relative max-w-7xl mx-auto px-6">
-
-    <!-- Coming soon banner -->
-    <div class="flex items-center gap-4 mb-12 fade-up">
-      <div class="h-px flex-1 bg-gradient-to-r from-transparent to-orange-500 opacity-40"></div>
-      <div class="font-mono text-xs tracking-widest px-4 py-2 border" style="color:#ff6b2b; border-color:#ff6b2b; background:rgba(255,107,43,.08);">IN DEVELOPMENT · PILOT INTEREST OPEN</div>
-      <div class="h-px flex-1 bg-gradient-to-l from-transparent to-orange-500 opacity-40"></div>
-    </div>
-
-    <div class="grid lg:grid-cols-2 gap-16 items-center">
-
-      <!-- Copy -->
-      <div class="fade-up">
-        <div class="section-label mb-5" style="color:#ff6b2b; border-left-color:#ff6b2b;">Product Line 04 · Autonomous Facility Intelligence</div>
-        <h2 class="font-display font-900 text-white leading-none mb-4" style="font-size:clamp(2.5rem,5vw,4.5rem);">
-          SENTINEL<br/>
-          <span style="color:#ff6b2b">ROVER</span>
-        </h2>
-        <div class="font-display font-700 text-steel-l text-2xl mb-6 tracking-wide">
-          Not a robot dog. Not Optimus.<br/>Simple factory automation that works.
-        </div>
-        <p class="text-steel-l text-lg leading-relaxed mb-5">
-          The Sentinel Rover doesn't do backflips. It shows up every shift, runs your grease routes, clears your focal areas, scans your equipment for thermal anomalies, and logs everything it sees.
-        </p>
-        <p class="text-steel text-base leading-relaxed mb-8">
-          No operator required. No checklist missed. No bearing seized because someone forgot Tuesday's PM route. No FOD event because debris was left in a precision work cell between shifts.
-        </p>
-
-        <!-- Core capabilities -->
-        <div class="space-y-3 mb-8">
-          <div class="flex items-start gap-3">
-            <div class="w-5 h-5 flex items-center justify-center flex-shrink-0 mt-0.5" style="background:rgba(255,107,43,.15); border:1px solid rgba(255,107,43,.4);">
-              <svg class="w-3 h-3" style="color:#ff6b2b" fill="currentColor" viewBox="0 0 20 20"><path d="M16.707 5.293a1 1 0 00-1.414 0L8 12.586l-3.293-3.293a1 1 0 00-1.414 1.414l4 4a1 1 0 001.414 0l8-8a1 1 0 000-1.414z"/></svg>
+        <div class="max-w-2xl">
+          <div class="font-mono text-xs tracking-widest mb-4" style="color:rgba(255,107,43,.8);">WHAT'S NEXT · IN DEVELOPMENT</div>
+          <h2 class="font-display font-900 text-white leading-none mb-3" style="font-size:clamp(1.8rem,3.5vw,2.6rem);">
+            SENTINEL ROVER
+          </h2>
+          <p class="text-steel text-sm mb-5 max-w-lg">Autonomous facility patrol that shows up every shift, runs your PM routes, and logs everything it sees. No operator required.</p>
+          <div class="space-y-2">
+            <div class="flex items-start gap-3">
+              <div class="w-1.5 h-1.5 rounded-full flex-shrink-0 mt-1.5" style="background:#ff6b2b;"></div>
+              <span class="text-steel text-sm">Autonomous TPM lubrication routes — every interval documented, every delivery confirmed</span>
             </div>
-            <div>
-              <div class="font-display font-700 text-white text-lg">Autonomous TPM Lubrication Routes</div>
-              <div class="text-steel text-sm mt-0.5">Scheduled grease delivery to mapped points. Every interval documented. Every delivery confirmed. Maintenance engineers get their time back.</div>
+            <div class="flex items-start gap-3">
+              <div class="w-1.5 h-1.5 rounded-full flex-shrink-0 mt-1.5" style="background:#ff6b2b;"></div>
+              <span class="text-steel text-sm">Thermal equipment scanning — anomalies flagged before they become failures</span>
             </div>
-          </div>
-          <div class="flex items-start gap-3">
-            <div class="w-5 h-5 flex items-center justify-center flex-shrink-0 mt-0.5" style="background:rgba(255,107,43,.15); border:1px solid rgba(255,107,43,.4);">
-              <svg class="w-3 h-3" style="color:#ff6b2b" fill="currentColor" viewBox="0 0 20 20"><path d="M16.707 5.293a1 1 0 00-1.414 0L8 12.586l-3.293-3.293a1 1 0 00-1.414 1.414l4 4a1 1 0 001.414 0l8-8a1 1 0 000-1.414z"/></svg>
-            </div>
-            <div>
-              <div class="font-display font-700 text-white text-lg">Thermal Equipment Scanning</div>
-              <div class="text-steel text-sm mt-0.5">Full-spectrum thermal pass on motors, bearings, electrical panels, and drive systems. Anomalies flagged and logged before they become failures. Predictive maintenance without the enterprise software price tag.</div>
-            </div>
-          </div>
-          <div class="flex items-start gap-3">
-            <div class="w-5 h-5 flex items-center justify-center flex-shrink-0 mt-0.5" style="background:rgba(255,107,43,.15); border:1px solid rgba(255,107,43,.4);">
-              <svg class="w-3 h-3" style="color:#ff6b2b" fill="currentColor" viewBox="0 0 20 20"><path d="M16.707 5.293a1 1 0 00-1.414 0L8 12.586l-3.293-3.293a1 1 0 00-1.414 1.414l4 4a1 1 0 001.414 0l8-8a1 1 0 000-1.414z"/></svg>
-            </div>
-            <div>
-              <div class="font-display font-700 text-white text-lg">Debris Clearance & FOD Sweep</div>
-              <div class="text-steel text-sm mt-0.5">Pre-shift and post-shift sweeps of focal areas, precision work cells, and high-consequence aisles. Keeps contamination out of environments that can't tolerate it.</div>
-            </div>
-          </div>
-          <div class="flex items-start gap-3">
-            <div class="w-5 h-5 flex items-center justify-center flex-shrink-0 mt-0.5" style="background:rgba(255,107,43,.15); border:1px solid rgba(255,107,43,.4);">
-              <svg class="w-3 h-3" style="color:#ff6b2b" fill="currentColor" viewBox="0 0 20 20"><path d="M16.707 5.293a1 1 0 00-1.414 0L8 12.586l-3.293-3.293a1 1 0 00-1.414 1.414l4 4a1 1 0 001.414 0l8-8a1 1 0 000-1.414z"/></svg>
-            </div>
-            <div>
-              <div class="font-display font-700 text-white text-lg">Safety Hazard Detection</div>
-              <div class="text-steel text-sm mt-0.5">Vision-based detection of spills, obstructions, open machine guards, and misplaced tools in walkways. Supervisor alert dispatched instantly. Every hazard photographed and logged.</div>
-            </div>
-          </div>
-          <div class="flex items-start gap-3">
-            <div class="w-5 h-5 flex items-center justify-center flex-shrink-0 mt-0.5" style="background:rgba(255,107,43,.15); border:1px solid rgba(255,107,43,.4);">
-              <svg class="w-3 h-3" style="color:#ff6b2b" fill="currentColor" viewBox="0 0 20 20"><path d="M16.707 5.293a1 1 0 00-1.414 0L8 12.586l-3.293-3.293a1 1 0 00-1.414 1.414l4 4a1 1 0 001.414 0l8-8a1 1 0 000-1.414z"/></svg>
-            </div>
-            <div>
-              <div class="font-display font-700 text-white text-lg">Full Platform Integration</div>
-              <div class="text-steel text-sm mt-0.5">Rover findings feed directly into the Metered HSE platform. A detected hazard becomes an HSE log entry. A thermal anomaly triggers a maintenance work order. Every patrol. Fully documented.</div>
+            <div class="flex items-start gap-3">
+              <div class="w-1.5 h-1.5 rounded-full flex-shrink-0 mt-1.5" style="background:#ff6b2b;"></div>
+              <span class="text-steel text-sm">FOD sweeps and safety hazard detection — every shift, fully logged</span>
             </div>
           </div>
         </div>
-      </div>
 
-      <!-- Right panel: rover concept + interest capture -->
-      <div class="fade-up" style="transition-delay:.15s;">
-        <!-- Rover capability panel — clean terminal style, no diagram -->
-        <div class="bg-charcoal-l border border-border relative mb-6" style="border-left:4px solid #ff6b2b;">
-          <div class="bg-charcoal-m border-b border-border px-5 py-3 flex items-center justify-between">
-            <div class="font-mono text-xs tracking-widest" style="color:#ff6b2b;">SENTINEL ROVER · SENSOR STACK</div>
-            <div class="font-mono text-xs text-steel">DEV BUILD · 2025</div>
-          </div>
-          <div class="p-6 space-y-4">
-
-            <!-- Thermal -->
-            <div class="bg-coal border border-border p-4">
-              <div class="flex items-center justify-between mb-3">
-                <div class="flex items-center gap-2">
-                  <div class="w-2 h-2 rounded-full bg-hiviz pulse-y"></div>
-                  <span class="font-mono text-xs text-hiviz tracking-widest">THERMAL ARRAY</span>
-                </div>
-                <span class="font-mono text-xs text-steel">ACTIVE SENSOR</span>
-              </div>
-              <div class="flex gap-1 mb-2">
-                <!-- Simulated thermal gradient bar -->
-                <div class="h-8 flex-1 rounded-sm" style="background:linear-gradient(90deg,#1e3a5f,#1e5f3a,#5f5f1e,#8b3a00,#cc2200,#ff6b2b);"></div>
-              </div>
-              <div class="flex justify-between">
-                <span class="font-mono text-xs text-steel">AMBIENT</span>
-                <span class="font-mono text-xs text-steel">WARM</span>
-                <span class="font-mono text-xs text-hiviz">ANOMALY ZONE</span>
-                <span class="font-mono text-xs" style="color:#ff6b2b;">CRITICAL</span>
-              </div>
-              <div class="mt-2 text-steel text-xs">Motor bearings, electrical panels, drive systems scanned continuously on patrol route.</div>
-            </div>
-
-            <!-- Vision -->
-            <div class="bg-coal border border-border p-4">
-              <div class="flex items-center justify-between mb-3">
-                <div class="flex items-center gap-2">
-                  <div class="w-2 h-2 rounded-full bg-blue-arc" style="animation:pulseA 2.3s ease-in-out infinite;"></div>
-                  <span class="font-mono text-xs text-blue-arc tracking-widest">VISION INTELLIGENCE</span>
-                </div>
-                <span class="font-mono text-xs text-steel">ACTIVE SENSOR</span>
-              </div>
-              <div class="grid grid-cols-3 gap-2 mb-2">
-                <div class="h-12 bg-charcoal-m border border-border flex items-center justify-center">
-                  <span class="font-mono text-xs text-green">CLEAR</span>
-                </div>
-                <div class="h-12 bg-charcoal-m border border-border flex items-center justify-center">
-                  <span class="font-mono text-xs text-hiviz">DEBRIS</span>
-                </div>
-                <div class="h-12 bg-charcoal-m border border-border flex items-center justify-center">
-                  <span class="font-mono text-xs text-green">CLEAR</span>
-                </div>
-              </div>
-              <div class="text-steel text-xs">FOD detection, spill identification, obstruction flagging, open guard detection.</div>
-            </div>
-
-            <!-- TPM route status -->
-            <div class="bg-coal border border-border p-4">
-              <div class="flex items-center justify-between mb-3">
-                <div class="flex items-center gap-2">
-                  <div class="w-2 h-2 rounded-full bg-green pulse"></div>
-                  <span class="font-mono text-xs text-green tracking-widest">TPM ROUTE STATUS</span>
-                </div>
-                <span class="font-mono text-xs text-steel">SHIFT 1 OF 3</span>
-              </div>
-              <div class="space-y-1.5">
-                <div class="flex items-center gap-2">
-                  <div class="flex-1 bg-charcoal-m h-2 rounded-full overflow-hidden">
-                    <div class="h-full bg-green rounded-full" style="width:100%"></div>
-                  </div>
-                  <span class="font-mono text-xs text-green w-24">LINE A · DONE</span>
-                </div>
-                <div class="flex items-center gap-2">
-                  <div class="flex-1 bg-charcoal-m h-2 rounded-full overflow-hidden">
-                    <div class="h-full bg-green rounded-full" style="width:100%"></div>
-                  </div>
-                  <span class="font-mono text-xs text-green w-24">LINE B · DONE</span>
-                </div>
-                <div class="flex items-center gap-2">
-                  <div class="flex-1 bg-charcoal-m h-2 rounded-full overflow-hidden">
-                    <div class="h-full rounded-full" style="width:60%; background:#ff6b2b;"></div>
-                  </div>
-                  <span class="font-mono text-xs w-24" style="color:#ff6b2b;">LINE C · ACTIVE</span>
-                </div>
-                <div class="flex items-center gap-2">
-                  <div class="flex-1 bg-charcoal-m h-2 rounded-full"></div>
-                  <span class="font-mono text-xs text-steel w-24">LINE D · QUEUED</span>
-                </div>
-              </div>
-            </div>
-
-          </div>
+        <div class="flex flex-col items-start md:items-center gap-2 flex-shrink-0">
+          <div class="font-mono text-xs tracking-widest mb-1" style="color:rgba(255,107,43,.7);">PILOT INTEREST OPEN</div>
+          <a href="#contact" class="font-display font-800 text-sm tracking-widest uppercase py-3 px-6 transition-all" style="background:#ff6b2b; color:#141618; clip-path:polygon(0 0,calc(100% - 8px) 0,100% 8px,100% 100%,8px 100%,0 calc(100% - 8px)); display:inline-block;">
+            Register Interest
+          </a>
+          <div class="font-mono text-xs text-steel">Lock pilot pricing before GA</div>
         </div>
 
-        <!-- Pilot interest capture -->
-        <div class="bg-coal p-6" style="border:1px solid rgba(255,107,43,.3); border-left:4px solid #ff6b2b;">
-          <div class="font-mono text-xs tracking-widest mb-3" style="color:#ff6b2b;">REGISTER PILOT INTEREST</div>
-          <p class="text-steel text-sm leading-relaxed mb-4">Early adopters shape the build. Register your facility now and lock pilot pricing before general availability.</p>
-          <div class="flex gap-3">
-            <a href="#contact" class="flex-1 text-center font-display font-800 text-sm tracking-widest uppercase py-3 px-4 transition-all" style="background:#ff6b2b; color:#141618; clip-path:polygon(0 0,calc(100% - 8px) 0,100% 8px,100% 100%,8px 100%,0 calc(100% - 8px));">
-              Register Interest
-            </a>
-          </div>
-        </div>
       </div>
     </div>
-
-    <!-- The bigger picture callout -->
-    <div class="mt-14 fade-up">
-      <div class="bg-charcoal-l border border-border p-8" style="border-top:4px solid #ff6b2b;">
-        <div class="grid md:grid-cols-4 gap-6 text-center">
-          <div>
-            <div class="font-display font-900 text-white mb-1" style="font-size:2.5rem; line-height:1;">$50B</div>
-            <div class="text-steel text-sm">Annual unplanned downtime cost in US manufacturing</div>
-          </div>
-          <div>
-            <div class="font-display font-900 mb-1" style="font-size:2.5rem; line-height:1; color:#ff6b2b;">78%</div>
-            <div class="text-steel text-sm">Of bearing failures traceable to improper lubrication</div>
-          </div>
-          <div>
-            <div class="font-display font-900 text-hiviz mb-1" style="font-size:2.5rem; line-height:1;">$0</div>
-            <div class="text-steel text-sm">Additional headcount required to run grease routes</div>
-          </div>
-          <div>
-            <div class="font-display font-900 text-green mb-1" style="font-size:2.5rem; line-height:1;">24/7</div>
-            <div class="text-steel text-sm">Autonomous patrol. Every shift. Every route. Logged.</div>
-          </div>
-        </div>
-      </div>
-    </div>
-
   </div>
 </section>
-
-<div class="hazard"></div>
 
 <!-- ═══════════════════════ WHY RIVER ROCK ═══════════════════════ -->
 <section class="py-28 relative">
